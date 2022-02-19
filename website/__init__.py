@@ -2,6 +2,7 @@ import os, sys; sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from .views import views
+from .auth import auth
 
 # init App
 app = Flask(__name__)
@@ -42,4 +43,6 @@ def create_app(dev):
 
 
     app.register_blueprint(views, url_prefix='/')
+    app.register_blueprint(auth, url_prefix='/')
+
     return app
