@@ -1,7 +1,7 @@
 from website import create_app
 
 # Dev Mode
-dev = True
+dev = False
 
 app = create_app(dev)
 
