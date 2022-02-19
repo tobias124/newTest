@@ -10,7 +10,7 @@ app = Flask(__name__)
 if dev:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:SuperSecret@localhost/betgame'
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://oywafgwhonrxjc' \
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://oywafgwhonrxjc' \
                                             ':1fb26b2f767713170d4a21a7a92edcf077c34b0ebdc0f0ac5f2958005bdb35c0@ec2-52' \
                                             '-19-170-215.eu-west-1.compute.amazonaws.com:5432/dajoliaojhf3su'
 
