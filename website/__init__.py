@@ -19,7 +19,6 @@ def create_app(dev):
 
     db = SQLAlchemy(app)
 
-
     class Player(db.Model):
         __tablename__ = 'player'
         id = db.Column(db.Integer, primary_key=True)
