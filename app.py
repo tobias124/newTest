@@ -28,7 +28,7 @@ class Test(db.Model):
         self.tester = tester
 
 
-db.create_all()
+#db.create_all()
 
 
 @app.route('/')
