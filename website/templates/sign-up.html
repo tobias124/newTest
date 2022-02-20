@@ -1,49 +1,115 @@
-{% extends "base.html" %} {% block title %}Sign Up{% endblock %} {% block
+{% extends "base.html" %} {% block title %}Player{% endblock %} {% block
 content %}
-<h1>This is Sign up Page</h1>
-<form method="POST">
+
+
+<h1>Player</h1>
+<br/>
+<button class="btn btn-primary" onclick="showHideElement()" type="button">Add new Player</button>
+
+<script type="text/javascript">
+  function showHideElement(){
+    var x = document.getElementById('signup');
+    if (x.style.display === 'none')
+    {
+      x.style.display = 'block';
+    } else
+    {
+      x.style.display = 'none';
+    }
+  }
+</script>
+
+<div id="signup" style="display: none">
+<form method="POST" >
   <h3 align="center">Sign Up</h3>
   <div class="form-group">
-    <label for="email">Email Adress</label>
+    <label for="email">E-Mail</label>
     <input
       type="email"
       class="form-control"
       id="email"
       name="email"
-      placeholder="Enter e-mail"
+      placeholder="E-mail eingeben"
     />
   </div>
   <div class="form-group">
-    <label for="firstName">First Name</label>
+    <label for="firstName">Vorname</label>
     <input
       type="text"
       class="form-control"
       id="firstName"
       name="firstName"
-      placeholder="Enter First Name"
+      placeholder="Vorname eingeben"
     />
   </div>
   <div class="form-group">
-    <label for="password1">Password</label>
+    <label for="lastName">Nachname</label>
+    <input
+      type="text"
+      class="form-control"
+      id="lastName"
+      name="lastName"
+      placeholder="Nachname eingeben"
+    />
+  </div>
+  <div class="form-group">
+    <label for="shirtNumber">Trikotnummer</label>
+    <input
+      type="text"
+      class="form-control"
+      id="shirtNumber"
+      name="shirtNumber"
+      placeholder="Trikotnummer eingeben"
+    />
+  </div>
+  <div class="form-group">
+    <label for="password1">Passwort</label>
     <input
       type="password"
       class="form-control"
       id="password1"
       name="password1"
-      placeholder="Enter password"
+      placeholder="Password eingeben"
     />
   </div>
   <div class="form-group">
-    <label for="password2">Password (Confirm)</label>
+    <label for="password2">Password (Bestätigung)</label>
     <input
       type="password"
       class="form-control"
       id="password2"
       name="password2"
-      placeholder="Confirm password"
+      placeholder="Passwort bestätigen"
     />
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+</div>
+<br/>
+<br/>
+<table class="table">
+<thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Vorname</th>
+    <th scope="col">Nachname</th>
+    <th scope="col">Nummer</th>
+    <th scope="col">E-Mail</th>
+  </tr>
+</thead>
+{% for player in players %}
+  <tbody>
+    <tr>
+      <th scope="row">{{loop.index}}</th>
+      <td>{{ player.first_name }}</td>
+      <td>{{ player.last_name }}</td>
+      <td>{{ player.shirt_number }}</td>
+      <td>{{ player.email }}</td>
+    </tr>
+  </tbody>
+
+{% endfor %}
+</table>
+
 
 {% endblock %}
