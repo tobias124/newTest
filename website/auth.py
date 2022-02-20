@@ -1,4 +1,5 @@
 from hashlib import sha256
+from math import remainder
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from website import db
 from website.models import Player
@@ -17,16 +18,24 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
         player = Player.query.filter_by(email=email).first()
+        remember = True if request.form.get('remember') else False #implement?
+
         if player:
             if check_password_hash(player.password, password):
+                login_user(player, remember=remember)
                 return redirect(url_for('views.home'))
             else:
                 flash('incorrect password, try again', category='error')
     return render_template('login.html')
 
+@auth.route('/logout', methods=('POST', 'GET'))
+def logout():
+    logout_user()
+    return redirect(url_for('auth.login'))
 
-@auth.route('/sign-up', methods=('POST', 'GET'))
-def sign_up():
+@auth.route('/spieler', methods=('POST', 'GET'))
+@login_required
+def spieler():
     players = Player.query
     if request.method == 'POST':
         email = request.form.get('email')

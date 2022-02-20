@@ -1,6 +1,7 @@
+from flask_login import UserMixin
 from . import db
 
-class Player(db.Model):
+class Player(UserMixin, db.Model):
     __tablename__ = 'player'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(200))
@@ -8,6 +9,7 @@ class Player(db.Model):
     password = db.Column(db.String(200))
     shirt_number = db.Column(db.String(200))
     email = db.Column(db.String(200), unique=True)
+    #add user Role (ADMIN, NORMAL)
 
     def __init__(self, first_name, last_name, password, shirt_number, email):
         self.first_name = first_name

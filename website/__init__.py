@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 import psycopg2
 
 # init App
@@ -23,6 +24,19 @@ db = SQLAlchemy(app)
 
 
 def create_app():
+    db.init_app(app)
+
+    login_manager = LoginManager()
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)
+
+    from .models import Player
+
+    @login_manager.user_loader
+    def load_user(player_id):
+         # since the user_id is just the primary key of our user table, use it in the query for the user
+        return Player.query.get(int(player_id))
+
     from .views import views
     from .auth import auth
     app.register_blueprint(views, url_prefix='/')
