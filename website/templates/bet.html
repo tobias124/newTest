@@ -1,13 +1,16 @@
 {% extends 'base.html' %} {% block title %}Tippen{% endblock %}
 {% block content %}
-<h1>Tippabgabe</h1>
-<br/>
+<h1>Tippen</h1>
+<h3 align="center">Aktuelle Tipps</h3>
 
 
-<h3>Aktuelle Tips</h3>
--------- Spiel ------------
-Spieltag Heimteam vs Auswärts Team
+{% for game in active_games %}
+<h1>Spiel:</h1>
+
 <table class="table table-striped">
+  <thead>
+    <th colspan="4">{{game.home_team }} vs {{game.away_team }}</th>
+  </thead>
     <thead>
         <tr>
           <th scope="col">#</th>
@@ -46,6 +49,7 @@ Spieltag Heimteam vs Auswärts Team
       </div>
       <br/>
       <button type="submit" class="btn btn-primary">Submit</button>
-
 </form>
+<br/><br/><br/><br/>
+{% endfor %}
 {% endblock %}

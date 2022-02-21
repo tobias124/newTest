@@ -19,6 +19,7 @@ def home():
 @login_required
 def bet():
     bets = Bet.query.filter_by(player_id=current_user.id)
+    games = Game.query.filter_by(enabled = True)
     if request.method == 'POST':
         participant = request.form.get('participant')
         home_goals = int(request.form.get('home_goals'))
@@ -31,7 +32,7 @@ def bet():
             db.session.commit()
         else:
             flash("Negative Anzahl Tore nicht möglich", category='error')
-    return render_template("bet.html", name=current_user.first_name, bets=bets)
+    return render_template("bet.html", name=current_user.first_name, bets=bets, active_games = games)
 
 @views.route('games', methods=['POST', 'GET'])
 def games():
