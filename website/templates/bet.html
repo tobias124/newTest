@@ -1,16 +1,16 @@
 {% extends 'base.html' %} {% block title %}Tippen{% endblock %}
 {% block content %}
 <h1>Tippen</h1>
-<h3 align="center">Aktuelle Tipps</h3>
 
 
 {% for game in active_games %}
-<h1>Spiel:</h1>
+<br/>
+<hr>
+<h4>Tipps:</h4>
+   {{game.home_team }} : {{game.away_team }}</b>
 
 <table class="table table-striped">
-  <thead>
-    <th colspan="4">{{game.home_team }} vs {{game.away_team }}</th>
-  </thead>
+
     <thead>
         <tr>
           <th scope="col">#</th>
@@ -20,7 +20,8 @@
         </tr>
       </thead>
 {% for bet in bets %}
-    <tbody>
+  {% if game.id == bet.game_id %}    
+<tbody>
       <tr>
         <th scope="row">{{loop.index}}</th>
         <td>{{bet.participant}}</td>
@@ -28,10 +29,12 @@
         <td>{{bet.away_goals}}</td>
       </tr>
     </tbody>
+  {%endif%}
 {% endfor %}
 </table>
 <!--{{player_id}}-->
-<br/>
+<h4>Tippabgabe</h4>
+{{game.home_team }} : {{game.away_team }}
 <form method="POST">
     <div class="row">
         <div class="col">
@@ -45,11 +48,14 @@
         <div class="col">
             <b>Auswärtstore</b>
           <input type="number" id="away_goals" name="away_goals" class="form-control" placeholder="Auswärts" required>
+          <input type="text" id="game_id" name="game_id" value='{{game.id}}' hidden/>
         </div>
       </div>
       <br/>
       <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+<hr>
 <br/><br/><br/><br/>
+
 {% endfor %}
 {% endblock %}

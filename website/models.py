@@ -46,7 +46,7 @@ class Bet(db.Model):
     away_goals = db.Column(db.Integer)
     participant = db.Column(db.String(20))
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
-    player_id = db.Column(db.Integer, db.ForeignKey('player.id'))
+    player_id = db.Column(db.Integer, db.ForeignKey('player.id', ondelete="CASCADE"))
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

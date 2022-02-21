@@ -62,39 +62,59 @@
     </tr>
   </thead>
 {% for game in active_games %} 
-{% if game.home_goals == None or game.away_goals == None %}
+
     <tbody>
       <tr>
         <td>{{game.home_team}} : {{game.away_team}}</td>
-        <form id="results">
-            <td style="width: 45px;"><input type="number" style="width: 45px;"/></td>
-            <td style="width: 45px;"><input type="number" style="width: 45px;"/></td>
-        </form>
-        <td style="width: 45px;"><button style="background-color: #008CBA; 
+        {% if game.home_goals == None or game.away_goals == None %}
+        <form id="results" method="POST">
+            <input type="text" class="form-control" id="edit_game_const" name="edit_game_const" value="1" hidden/>
+            <td style="width: 60px;"><input  class="form-control" id="home_goals_result" name="home_goals_result" type="number" style="width: 60px;"/></td>
+            <td style="width: 60px;"><input  class="form-control" id="away_goals_result" name="away_goals_result" type="number" style="width: 60px;"/></td>
+         <input  class="form-control" id="current_game" name="current_game" value="{{game.id}}" hidden>      
+        <td style="width: 45px;"><button class="btn btn-primary" style=" 
             border: none;
             color: white;
             padding-top: 11px;
             padding-bottom: 11px;
             text-align: center;
             text-decoration: none;
-            display: inline-block;
-            font-size: 12px;" type="button">Save</td>
-            <td style="width: 20px;"><button style="
+            display: inline-block;" type="submit">Save</td>
+        </form>
+            <td style="width: 20px;"><button  style="
                 width: 20px;
                 border: none;
                 color: rgb(144, 38, 38);
                 padding-top: 11px;
+                
                 text-align: center;
                 text-decoration: none;
                 display: inline-block;
                 font-weight: bolder;
-                font-size: 12px;" type="button">X</td>
+                font-size: 18px;" type="button">X</td>
       </tr>
     </tbody>
 
 
 {% else %}
-    {{game.home_goals}}:{{game.away_goals}} 
+<td style="width: 60px;">{{game.home_goals}}</td>
+<td style="width: 60px;">{{game.away_goals}}</td>
+<td></td>
+<td style="width: 20px;">
+    <form method="POST" id="deletion">
+        <input type="text" name="delete" id="delete" value="1" hidden>
+        <input class="form-control" id="current_game" name="current_game" value="{{game.id}}" hidden>
+        <button  style="
+        width: 20px;
+        border: none;
+        color: rgb(144, 38, 38);
+        padding-top: 11px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-weight: bolder;
+        font-size: 18px;" type="submit">X</td>
+    </form>
 {%endif%}
 
 {% endfor %} 
