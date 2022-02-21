@@ -3,5 +3,18 @@
 
 
 <h1>Dashboard</h1>
-<p>Hello {{ user_first_name }}</p>
+<p>Hallo {{ user_first_name }}</p>
+<p>Hier sind die Gewinner deiner abgegebenen Tipps aufgelistet:</p>
+
+
+{% for winner in winners %}
+
+<b>Gewinner: {{ winner[0].participant }}</b> <br/>
+Spiel: {{winner[1].home_team}} {{winner[1].away_team}} {{winner[1].home_goals}} : {{winner[1].away_goals }} <br/>
+Tipp: {{winner[0].home_goals}} : {{winner[0].away_goals}}<br/>
+<br/>
+{% endfor %}
+
+
+
 {% endblock %}

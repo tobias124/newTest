@@ -1,10 +1,11 @@
 from flask import Blueprint, flash, render_template, request
 from flask_login import login_required, current_user
-from website.models import Bet, Game
+from website.models import Bet, Game, Player
 from . import db
 
 views = Blueprint('views', __name__)
 
+ 
 
 def check_Bet_Form_Requirements(home_goals, away_goals):
     return home_goals >= 0 and away_goals >= 0
@@ -13,8 +14,11 @@ def check_Bet_Form_Requirements(home_goals, away_goals):
 @views.route('/index')
 @login_required
 def home():
+    winners = db.session.query(Bet, Game).filter(Bet.player_id == current_user.id)\
+        .join(Game, (Game.id == Bet.game_id)).filter(Bet.away_goals == Game.away_goals, Bet.home_goals == Game.home_goals)
+   
     return render_template("index.html", user_first_name=current_user.first_name,
-                           user_last_name=current_user.last_name)
+                           user_last_name=current_user.last_name, winners = winners)
 
 
 @views.route('/bet', methods=['POST', 'GET'])
@@ -41,6 +45,11 @@ def bet():
 @views.route('games', methods=['POST', 'GET'])
 def games():
     games = Game.query.filter_by()#enabled=True)
+    winners = db.session.query(Bet, Game, Player).filter()\
+        .join(Game, (Game.id == Bet.game_id))\
+        .join(Player, (Bet.player_id == Player.id))\
+        .filter(Bet.away_goals == Game.away_goals, Bet.home_goals == Game.home_goals)
+    games_done = Game.query.filter_by(enabled=False)
     if request.method == 'POST':
         # Add new game:
         if request.form.get('add_game_const') == '1':
@@ -61,6 +70,7 @@ def games():
                 game_to_update.home_goals = home_goals_result
                 game_to_update.away_goals = away_goals_result
                 game_to_update.enabled = False
+                #save winner ??
                 db.session.commit()
                 flash("Game updated successfully!", category='success')
         # Delete Game
@@ -72,6 +82,6 @@ def games():
                 db.session.delete(bets)
             db.session.delete(game_to_delete)
             db.session.commit()
-            
             flash("Game deleted successfully!", category='success')
-    return render_template('games.html', active_games=games)
+    
+    return render_template('games.html', active_games=games, winners=winners, games_done=games_done)
