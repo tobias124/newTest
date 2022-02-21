@@ -48,15 +48,16 @@
   <br />
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-
+<br/>
 <h3>Aktive Spiele</h3>
 
-<table class="table table-striped" style="width: 100%;">
+<table class="table table-striped">
 <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Heim</th>
-      <th scope="col">Äuswärts</th>
+      <th scope="col">Spiel</th>
+      <th style="text-align: center;" colspan="2" scrope="col">Ergebnis</th>
+      <!--<th scrope="col">A</th>-->
       <th scrope="col"></th>
       <th scrope="col"></th>
     </tr>
@@ -66,14 +67,20 @@
     <tbody>
       <tr>
         <th scope="row">{{game.gameday}}</th>
-        <td>{{game.home_team}}</td>
-        <td>{{game.away_team}}</td>
+        <td>{{game.home_team}} : {{game.away_team}}</td>
         <form id="results">
             <td style="width: 50px;"><input type="number" style="width: 50px;"/></td>
             <td style="width: 50px;"><input type="number" style="width: 50px;"/></td>
         </form>
-        <td><input type="number" style="width: 50px;"/></td>
-        <td><input type="number" style="width: 50px;"/></td>
+        <td style="width: 50px;"><button style="  background-color: #008CBA; 
+            border: none;
+            color: white;
+            padding: 11px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;" type="button" style="width: 50px;" >Save</td>
+        <td style="width: 50px;"><button class="btn"><i class="fa fa-trash"></i></button></td>
       </tr>
     </tbody>
 
