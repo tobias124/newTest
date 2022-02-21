@@ -1,8 +1,8 @@
 {% extends "base.html" %} {% block title %}Player{% endblock %} {% block
 content %}
 
-
-<br/><br/>
+{% if current_user.role == "ADMIN" %}
+<br/>
 <button class="btn btn-primary" onclick="showHideElement()" type="button">Add new Player</button>
 
 <script type="text/javascript">
@@ -87,7 +87,9 @@ content %}
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 </div>
+
 <br/>
+{% endif %}
 <h1>Spielerliste</h1>
 <div class="table-responsive"> 
 <table class="table" width=100%>

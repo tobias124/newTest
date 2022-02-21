@@ -12,7 +12,7 @@ import psycopg2
 auth = Blueprint('auth', __name__)
 
 
-@auth.route('/login', methods=('POST', 'GET'))
+@auth.route('/', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
@@ -23,9 +23,10 @@ def login():
         if player:
             if check_password_hash(player.password, password):
                 login_user(player, remember=remember)
-                return redirect(url_for('views.home'))
             else:
                 flash('incorrect password, try again', category='error')
+    if current_user.is_authenticated:
+        return redirect(url_for('views.home'))
     return render_template('login.html')
 
 @auth.route('/logout', methods=('POST', 'GET'))
@@ -33,8 +34,8 @@ def logout():
     logout_user()
     return redirect(url_for('auth.login'))
 
-@auth.route('/spieler', methods=('POST', 'GET'))
-@login_required
+@auth.route('/spieler', methods=['POST', 'GET'])
+#@login_required
 def spieler():
     players = Player.query
     if request.method == 'POST':
@@ -44,6 +45,7 @@ def spieler():
         first_name = request.form.get('firstName')
         last_name = request.form.get('lastName')
         shirt_number = request.form.get('shirtNumber')
+        role = "PLAYER"
         player = Player.query.filter_by(email=email).first()
         if player:
             flash('Email already exists.', category='error')
@@ -57,7 +59,8 @@ def spieler():
             flash('Password must be longer than 6 characters.', category='error')
         else:
             new_player = Player(email=email, first_name=first_name, last_name=last_name, 
-            shirt_number=shirt_number, password=generate_password_hash(password1, method='sha256'))
+            shirt_number=shirt_number, password=generate_password_hash(password1, method='sha256'),
+             role=role)
             db.session.add(new_player)
             db.session.commit()
-    return render_template('sign-up.html', players = players)
+    return render_template('sign-up.html', current_user = current_user, players = players)

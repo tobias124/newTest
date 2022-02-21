@@ -19,8 +19,10 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# if dev:
-#    db.create_all()
+from .models import Player
+
+if dev:
+    db.create_all()
 
 
 def create_app():
@@ -29,8 +31,6 @@ def create_app():
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
-
-    from .models import Player
 
     @login_manager.user_loader
     def load_user(player_id):

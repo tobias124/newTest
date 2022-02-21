@@ -1,0 +1,88 @@
+{% extends 'base.html' %} {% block title %}Games{% endblock %} {% block content
+%}
+
+<h1>Spiel hinzufügen</h1>
+<form id="add_game" method="POST">
+  <div class="row">
+    <div class="col">
+      <label for="gameday"><b>Spieltag</b></label>
+      <input
+        style="width: 80px"
+        type="number"
+        class="form-control"
+        id="gameday"
+        name="gameday"
+      />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <label for="home_team"><b>Heim</b></label>
+      <input
+        type="text"
+        class="form-control"
+        id="home_team"
+        name="home_team"
+        placeholder="Heim Team"
+      />
+    </div>
+    <div class="col">
+      <label for="away_team"><b>Auswärts</b></label>
+      <input
+        type="text"
+        class="form-control"
+        id="away_team"
+        name="away_team"
+        placeholder="Auswärts Team"
+      />
+    </div>
+    <input
+      type="text"
+      class="form-control"
+      id="add_game_const"
+      name="add_game_const"
+      value="1"
+      hidden
+    />
+  </div>
+  <br />
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<h3>Aktive Spiele</h3>
+
+<table class="table table-striped" style="width: 100%;">
+<thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Heim</th>
+      <th scope="col">Äuswärts</th>
+      <th scrope="col"></th>
+      <th scrope="col"></th>
+    </tr>
+  </thead>
+{% for game in active_games %} 
+{% if game.home_goals == None or game.away_goals == None %}
+    <tbody>
+      <tr>
+        <th scope="row">{{game.gameday}}</th>
+        <td>{{game.home_team}}</td>
+        <td>{{game.away_team}}</td>
+        <form id="results">
+            <td><input type="number" style="width: 50px;"/></td>
+            <td><input type="number" style="width: 50px;"/></td>
+        </form>
+        <td><input type="number" style="width: 50px;"/></td>
+        <td><input type="number" style="width: 50px;"/></td>
+      </tr>
+    </tbody>
+
+
+{% else %}
+    {{game.home_goals}}:{{game.away_goals}} 
+{%endif%}
+
+{% endfor %} 
+</table>
+
+{% endblock %}

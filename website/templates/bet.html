@@ -1,1 +1,51 @@
-<h1>Betting</h1>
+{% extends 'base.html' %} {% block title %}Tippen{% endblock %}
+{% block content %}
+<h1>Tippabgabe</h1>
+<br/>
+
+
+<h3>Aktuelle Tips</h3>
+-------- Spiel ------------
+Spieltag Heimteam vs Auswärts Team
+<table class="table table-striped">
+    <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Heim</th>
+          <th scope="col">Äuswärts</th>
+        </tr>
+      </thead>
+{% for bet in bets %}
+    <tbody>
+      <tr>
+        <th scope="row">{{loop.index}}</th>
+        <td>{{bet.participant}}</td>
+        <td>{{bet.home_goals}}</td>
+        <td>{{bet.away_goals}}</td>
+      </tr>
+    </tbody>
+{% endfor %}
+</table>
+<!--{{player_id}}-->
+<br/>
+<form method="POST">
+    <div class="row">
+        <div class="col">
+            <b>Name</b> 
+          <input type="text" id="participant" name="participant" class="form-control" placeholder="Name" required>
+        </div>
+        <div class="col">
+            <b>Heimtore</b>
+          <input type="number" id="home_goals" name="home_goals" class="form-control" placeholder="Heim" required>
+        </div>
+        <div class="col">
+            <b>Auswärtstore</b>
+          <input type="number" id="away_goals" name="away_goals" class="form-control" placeholder="Auswärts" required>
+        </div>
+      </div>
+      <br/>
+      <button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+{% endblock %}
