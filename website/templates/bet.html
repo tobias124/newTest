@@ -1,34 +1,29 @@
 {% extends 'base.html' %} {% block title %}Tippen{% endblock %}
 {% block content %}
 <h1>Tippen</h1>
-
-
 {% for game in active_games %}
+{% set count = namespace(value=1) %} 
 <br/>
 <hr>
-<h4>Tipps:</h4>
+<h4>Aktuelle Tipps</h4>
    {{game.home_team }} : {{game.away_team }}</b>
-
 <table class="table table-striped">
-
     <thead>
         <tr>
           <th scope="col">#</th>
           <th scope="col">Name</th>
           <th scope="col">Heim</th>
-          <th scope="col">Äuswärts</th>
+          <th scope="col">Auswärts</th>
         </tr>
       </thead>
 {% for bet in bets %}
   {% if game.id == bet.game_id %}    
-<tbody>
       <tr>
-        <th scope="row">{{loop.index}}</th>
+        <th scope="row">{{ count.value }}{% set count.value = count.value + 1 %}</th>
         <td>{{bet.participant}}</td>
         <td>{{bet.home_goals}}</td>
         <td>{{bet.away_goals}}</td>
       </tr>
-    </tbody>
   {%endif%}
 {% endfor %}
 </table>
@@ -55,7 +50,7 @@
       <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 <hr>
-<br/><br/><br/><br/>
+<br/>
 
 {% endfor %}
 {% endblock %}

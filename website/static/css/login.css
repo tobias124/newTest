@@ -1,5 +1,5 @@
 body {
-    background-color: rgba(35, 58, 102, 0.9);
+    background-color: rgba(35, 58, 102, 0.9)!important;
 }
 
 #login_button{

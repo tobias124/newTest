@@ -44,7 +44,7 @@ def bet():
 
 @views.route('games', methods=['POST', 'GET'])
 def games():
-    games = Game.query.filter_by()#enabled=True)
+    games = Game.query.filter_by().order_by(Game.gameday.asc())
     winners = db.session.query(Bet, Game, Player).filter()\
         .join(Game, (Game.id == Bet.game_id))\
         .join(Player, (Bet.player_id == Player.id))\
@@ -54,15 +54,19 @@ def games():
         # Add new game:
         if request.form.get('add_game_const') == '1':
             gameday = request.form.get('gameday')
-            home_team = request.form.get('home_team')
-            away_team = request.form.get('away_team')
-            new_game = Game(gameday=gameday, home_team=home_team,
-                            away_team=away_team, enabled=True)
-            db.session.add(new_game)
-            db.session.commit()
+            if(gameday.isnumeric()):
+                home_team = request.form.get('home_team')
+                away_team = request.form.get('away_team')
+                new_game = Game(gameday=gameday, home_team=home_team,
+                                away_team=away_team, enabled=True)
+                db.session.add(new_game)
+                db.session.commit()
+                flash("Game added successfully!", category='success')
+            else:
+                flash("Nur positive Zahl für Spieltag möglich!", category='error')
         # Edit Game Data:
         elif request.form.get('edit_game_const') == '1' and (request.form.get('home_goals_result') != "" and request.form.get('away_goals_result') != ""):
-            if int(request.form.get('home_goals_result')) >= 0 and int(request.form.get('away_goals_result')) >= 0:
+             if request.form.get('home_goals_result').isnumeric() and request.form.get('away_goals_result').isnumeric():
                 home_goals_result = int(request.form.get('home_goals_result'))
                 away_goals_result = int(request.form.get('away_goals_result'))
                 current_game = int(request.form.get('current_game'))
@@ -73,11 +77,14 @@ def games():
                 #save winner ??
                 db.session.commit()
                 flash("Game updated successfully!", category='success')
+             else:
+                flash("Nur positive Zahleingaben möglich", category="error")
         # Delete Game
         elif request.form.get('delete') == '1':
             current_game = int(request.form.get('current_game'))
             bets_to_delete = Bet.query.filter_by(game_id = current_game)
             game_to_delete = Game.query.get(current_game)
+            # Delete Bets
             for bets in bets_to_delete:
                 db.session.delete(bets)
             db.session.delete(game_to_delete)
