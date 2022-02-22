@@ -2,6 +2,23 @@ body {
     background-color: rgb(248, 248, 248)!important;
 }
 
+#table_home{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0rem;
+}
+
+#table_home td{
+    max-width: 800px;
+    padding: 0.80rem;
+}
+
+
 #bet_table td{
+    padding: 0.25rem;
+}
+
+#current_bet_table th td{
     padding: 0.25rem;
 }

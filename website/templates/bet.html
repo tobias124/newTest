@@ -7,7 +7,7 @@
 <hr>
 <h4>Aktuelle Tipps</h4>
    {{game.home_team }} : {{game.away_team }}</b>
-<table class="table table-striped">
+<table id="current_bet_table" class="table table-striped">
     <thead>
         <tr>
           <th scope="col">#</th>
@@ -32,12 +32,14 @@
 {{game.home_team }} : {{game.away_team }}
 <form method="POST">
   <table id="bet_table" class="table">
-    <div>
-      <tr>
+    <thead>  
+    <tr>
       <th>Name</th>
       <th>Heim</th>
       <th>Ausw.</th>
       </tr>
+    </thead>
+    <tbody>
       <tr>
       <td>  
           <input type="text" id="participant" name="participant" class="form-control" placeholder="Name" required>
@@ -56,7 +58,7 @@
         <td  style="border: none"><button type="submit" class="btn btn-primary">Submit</button></td>
         <td  style="border: none" colspan="2"></td>
         </tr>
-      </div>
+      </tbody>
     </table>
      
 </form>

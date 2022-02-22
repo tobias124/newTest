@@ -2,19 +2,36 @@
 {% block content %}
 
 
-<h1>Dashboard</h1>
-<p>Hallo {{ user_first_name }}</p>
+<h1>
+    <img src="./static/img/logo.png" style="padding-bottom: 5px; margin-right: 4px" width="30px" height="auto">
+    Dashboard von {{ user_first_name }}
+    <img width="30px" height="auto" style="padding-bottom: 5px;" 
+    src="./static/img/fussballspieler.png">
+</h1>
+<br/>
+<h4>Hallo {{ user_first_name }}!</h4>
 <p>Hier sind die Gewinner deiner abgegebenen Tipps aufgelistet:</p>
 
 
-{% for winner in winners %}
+{% for game in games_done %}
+<div style="background-color:azure; border: 1px solid rgb(200, 200, 200); padding: 8px">
+<b>Gewinner </b><br/>{{game.home_team}} : {{game.away_team}} {{game.home_goals}} : {{game.away_goals}}<br/>
 
-<b>Gewinner: {{ winner[0].participant }}</b> <br/>
-Spiel: {{winner[1].home_team}} {{winner[1].away_team}} {{winner[1].home_goals}} : {{winner[1].away_goals }} <br/>
-Tipp: {{winner[0].home_goals}} : {{winner[0].away_goals}}<br/>
+<table class="table" id="table_home">
+  <tr>  
+      <th style="border-top: none;">Gewinner</th>
+      <th style="border-top: none;">Tipp</th>
+    </tr>
+  {% for winner in winners %}
+{% if winner[1].id == game.id %}
+    <tr>
+    <td style="max-width: 95px;">{{ winner[0].participant }}</td>
+    <td style="width: 45px;">{{winner[0].home_goals}} : {{winner[0].away_goals}}</td>
+   </tr>
+  {%endif%}
+  {% endfor %}
+</table>
+</div>
 <br/>
-{% endfor %}
-
-
-
+{%endfor%}
 {% endblock %}
