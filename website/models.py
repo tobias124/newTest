@@ -8,7 +8,6 @@ class Player(UserMixin, db.Model):
     first_name = db.Column(db.String(200))
     last_name = db.Column(db.String(200))
     password = db.Column(db.String(200))
-    shirt_number = db.Column(db.String(200))
     email = db.Column(db.String(200), unique=True)
     role = db.Column(db.String(20))
     bets = db.relationship('Bet') # 1 to Many Relation

@@ -1,40 +1,54 @@
-{% extends "base.html" %} {% block title %}Login{% endblock %}
+{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
+%}
 
-{% block content %}
-
-<link rel="stylesheet" href="./static/css/login.css">
+<link rel="stylesheet" href="./static/css/login.css" />
 
 <div>
-  <div class="p-3 mb-2 bg-light text-dark" style="border-radius: 10px; display: block; margin-left: auto; margin-right: auto; margin-top: 35px; max-width: 425px;">
-  <h1 align="center">Tippspiel</h1>
-  <img src="./static/img/logo.png" alt="spg-pitztal-logo" height="150px"  style="display: block; margin-left: auto; margin-right: auto;">
-  <h3 align="center">Login</h3>
-  <hr/>
+  <div
+    class="p-3 mb-2 bg-light text-dark"
+    style="
+      border-radius: 10px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 35px;
+      max-width: 425px;
+    "
+  >
+    <h1 align="center">Tippspiel</h1>
+    <img
+      src="./static/img/logo.png"
+      alt="spg-pitztal-logo"
+      height="150px"
+      style="display: block; margin-left: auto; margin-right: auto"
+    />
+    <h3 align="center">Login</h3>
+    <hr />
     <form method="POST">
-    <div class="form-group">
-      <b><label for="email">Email Adresse</label></b>
-      <input
-      style="max-width:400px"
-        type="email"
-        class="form-control"
-        name="email"
-        id="email"
-        placeholder="Enter e-mail"
-      />
-    </div>
-    <div class="form-group">
-      <b><label for="password">Password</label></b>
-      <input
-        style="max-width:400px"
-        type="password"
-        class="form-control"
-        id="password"
-        name="password"
-        placeholder="Enter password"
-      />
-    </div>
-    <button id="login_button" type="submit" class="btn btn-lg">Login</button>
-  </form>
+      <div class="form-group">
+        <b><label for="email">Email Adresse</label></b>
+        <input
+          style="max-width: 400px"
+          type="email"
+          class="form-control"
+          name="email"
+          id="email"
+          placeholder="E-Mail eingeben"
+        />
+      </div>
+      <div class="form-group">
+        <b><label for="password">Password</label></b>
+        <input
+          style="max-width: 400px"
+          type="password"
+          class="form-control"
+          id="password"
+          name="password"
+          placeholder="Password eingeben"
+        />
+      </div>
+      <button id="login_button" type="submit" class="btn btn-lg">Login</button>
+    </form>
   </div>
 </div>
 {% endblock %}

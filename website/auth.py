@@ -44,7 +44,6 @@ def spieler():
         password2 = request.form.get('password2')
         first_name = request.form.get('firstName')
         last_name = request.form.get('lastName')
-        shirt_number = request.form.get('shirtNumber')
         role = "PLAYER"
         player = Player.query.filter_by(email=email).first()
         if player:
@@ -59,8 +58,7 @@ def spieler():
             flash('Password must be longer than 6 characters.', category='error')
         else:
             new_player = Player(email=email, first_name=first_name, last_name=last_name, 
-            shirt_number=shirt_number, password=generate_password_hash(password1, method='sha256'),
-             role=role)
+                password=generate_password_hash(password1, method='sha256'), role=role)
             db.session.add(new_player)
             db.session.commit()
     return render_template('sign-up.html', current_user = current_user, players = players)
