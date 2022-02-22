@@ -3,18 +3,44 @@
 
 
 <h1>
-    <img src="./static/img/logo.png" style="padding-bottom: 5px; margin-right: 4px" width="30px" height="auto">
-    Dashboard von {{ user_first_name }}
-    <img width="30px" height="auto" style="padding-bottom: 5px;" 
-    src="./static/img/fussballspieler.png">
+    Dashboard
 </h1>
 <br/>
-<h4>Hallo {{ user_first_name }}!</h4>
-<p>Hier sind die Gewinner deiner abgegebenen Tipps aufgelistet:</p>
 
+<h4><img src="./static/img/logo.png" style="padding-bottom: 5px; margin-right: 4px" width="30px" height="auto">
+    Hallo {{ user_first_name }}!
+    <img width="30px" height="auto" style="padding-bottom: 5px;" 
+    src="./static/img/fussballspieler.png">
+</h4>
+<br/>
+{%if games_active %}
+
+<h5>Aktuelle Spiele:</h5>
+<div class="container">
+    {% for game_active in games_active %}
+    <div class="row">
+      <div class="col-sm">
+        One of three columns
+      </div>
+      <div class="col-sm">
+        One of three columns
+      </div>
+      <div class="col-sm">
+        One of three columns
+      </div>
+    </div>
+    {%endfor%}
+  </div>
+{% endif %}
+<br/>
+<h5>Gewinner deiner Tipps:</h5>
 
 {% for game in games_done %}
-<div style="background-color:azure; border: 1px solid rgb(200, 200, 200); padding: 8px">
+{% if loop.index is divisibleby 2 %}
+<div style="background-color:azure; padding: 8px; margin-bottom:0px">
+{%else%}
+<div style="background-color:cornsilk; padding: 8px;  margin-bottom:0px">
+{% endif %}
 <b>Gewinner </b><br/>{{game.home_team}} : {{game.away_team}} {{game.home_goals}} : {{game.away_goals}}<br/>
 
 <table class="table" id="table_home">
@@ -32,6 +58,6 @@
   {% endfor %}
 </table>
 </div>
-<br/>
+
 {%endfor%}
 {% endblock %}

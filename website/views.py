@@ -14,13 +14,14 @@ def check_Bet_Form_Requirements(home_goals, away_goals):
 @views.route('/index')
 @login_required
 def home():
+    games_active = Game.query.filter_by(enabled=True)
     games_done = Game.query.filter_by(enabled=False)
     winners = db.session.query(Bet, Game).filter(Bet.player_id == current_user.id)\
         .join(Game, (Game.id == Bet.game_id)).filter(Bet.away_goals == Game.away_goals, Bet.home_goals == Game.home_goals)
    
     return render_template("index.html", user_first_name=current_user.first_name,
                            user_last_name=current_user.last_name, winners = winners,
-                           games_done=games_done)
+                           games_done=games_done, games_active=games_active)
 
 
 @views.route('/bet', methods=['POST', 'GET'])
