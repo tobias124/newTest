@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, render_template, request
 from flask_login import login_required, current_user
-from website.models import Bet, Game, Player
+from website.models import *
 from . import db
 
 views = Blueprint('views', __name__)
@@ -45,8 +45,9 @@ def bet():
     return render_template("bet.html", name=current_user.first_name, bets=bets, active_games=games)
 
 
-@views.route('games', methods=['POST', 'GET'])
+@views.route('/games', methods=['POST', 'GET'])
 def games():
+    all_players = Player.filter()
     games = Game.query.filter_by().order_by(Game.gameday.asc())
     winners = db.session.query(Bet, Game, Player).filter()\
         .join(Game, (Game.id == Bet.game_id))\
@@ -63,6 +64,7 @@ def games():
                 new_game = Game(gameday=gameday, home_team=home_team,
                                 away_team=away_team, enabled=True)
                 db.session.add(new_game)
+                all_players.paying.append(new_game)
                 db.session.commit()
                 flash("Game added successfully!", category='success')
             else:
@@ -95,3 +97,8 @@ def games():
             flash("Game deleted successfully!", category='success')
     
     return render_template('games.html', active_games=games, winners=winners, games_done=games_done)
+
+@views.route('/bezahlung')
+def payment():
+
+    return render_template('payment.html')

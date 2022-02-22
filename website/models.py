@@ -1,6 +1,14 @@
+from lib2to3.pytree import Base
 from flask_login import UserMixin
+from sqlalchemy import *
 from . import db
 
+
+participates = db.Table('participates',
+    db.Column('player_id', db.Integer, db.ForeignKey('player.id')),
+    db.Column('game_id', db.Integer, db.ForeignKey('game.id')),
+    db.Column('bet_is_payed', db.Boolean, default=False)
+)
 # User
 class Player(UserMixin, db.Model):
     __tablename__ = 'player'
@@ -11,12 +19,13 @@ class Player(UserMixin, db.Model):
     email = db.Column(db.String(200), unique=True)
     role = db.Column(db.String(20))
     bets = db.relationship('Bet') # 1 to Many Relation
+    paying = db.relationship('Game', secondary = participates, backref='payers')
+    # PLAYER AND GAME REL
 
-    def __init__(self, first_name, last_name, password, shirt_number, email, role):
+    def __init__(self, first_name, last_name, password, email, role):
         self.first_name = first_name
         self.last_name = last_name
         self.password = password
-        self.shirt_number = shirt_number
         self.email = email
         self.role = role
 

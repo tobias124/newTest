@@ -20,13 +20,7 @@
     {% for game_active in games_active %}
     <div class="row">
       <div class="col-sm">
-        One of three columns
-      </div>
-      <div class="col-sm">
-        One of three columns
-      </div>
-      <div class="col-sm">
-        One of three columns
+        {{game_active.home_team}} vs. {{game_active.away_team}}
       </div>
     </div>
     {%endfor%}
