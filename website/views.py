@@ -47,7 +47,6 @@ def bet():
 
 @views.route('/games', methods=['POST', 'GET'])
 def games():
-    all_players = Player.filter()
     games = Game.query.filter_by().order_by(Game.gameday.asc())
     winners = db.session.query(Bet, Game, Player).filter()\
         .join(Game, (Game.id == Bet.game_id))\
@@ -64,7 +63,6 @@ def games():
                 new_game = Game(gameday=gameday, home_team=home_team,
                                 away_team=away_team, enabled=True)
                 db.session.add(new_game)
-                all_players.paying.append(new_game)
                 db.session.commit()
                 flash("Game added successfully!", category='success')
             else:
@@ -100,5 +98,4 @@ def games():
 
 @views.route('/bezahlung')
 def payment():
-
     return render_template('payment.html')

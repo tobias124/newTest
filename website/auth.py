@@ -37,6 +37,7 @@ def logout():
 @auth.route('/spieler', methods=['POST', 'GET'])
 #@login_required
 def spieler():
+    players = Player.query
     if request.method == 'POST':
         email = request.form.get('email')
         password1 = request.form.get('password1')
