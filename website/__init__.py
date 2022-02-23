@@ -21,9 +21,8 @@ if use_heroku_db_locally:
 else:
     ## WHEN RUNNING ON HEROKU (IF DATABASE URL CHANGES) 
     DATABASE_URL = os.environ.get('DATABASE_URL')
-    DATABASE_URL.replace("postgres", "postgresql")
-    heroku_db_link = DATABASE_URL
-
+    if DATABASE_URL:
+        heroku_db_link = DATABASE_URL.replace("postgres", "postgresql")
 local_db_link = 'postgresql://postgres:SuperSecret@localhost/betgame'
 
 ############################################
