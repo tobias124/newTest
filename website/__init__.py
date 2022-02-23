@@ -11,14 +11,14 @@ dev = False
 #Local_DB_Connection
 local_db_link = 'postgresql://postgres:SuperSecret@localhost/betgame'
 # Herouku DB Connection 
-DATABASE_URL = os.environ['DATABASE_URL']
+heroku_db_link = os.environ['DATABASE_URL']
 
 
 app.secret_key = "dkslaljköadjlkdasfl1147cx22111###d"
 if dev:
     app.config['SQLALCHEMY_DATABASE_URI'] = local_db_link
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+    app.config['SQLALCHEMY_DATABASE_URI'] = heroku_db_link
     #psycopg2.connect(heroku_db_link)
     
 
