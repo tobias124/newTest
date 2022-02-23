@@ -3,12 +3,13 @@ from flask_login import UserMixin
 from sqlalchemy import *
 from . import db
 
-
+# assoc. table between player and game for payments
 participates = db.Table('participates',
     db.Column('player_id', db.Integer, db.ForeignKey('player.id')),
     db.Column('game_id', db.Integer, db.ForeignKey('game.id')),
     db.Column('bet_is_payed', db.Boolean, default=False)
 )
+
 # User
 class Player(UserMixin, db.Model):
     __tablename__ = 'player'

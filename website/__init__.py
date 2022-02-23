@@ -5,7 +5,7 @@ import psycopg2
 
 # init App
 app = Flask(__name__)
-dev = True
+dev = False
 
 local_db_link = 'postgresql://postgres:SuperSecret@localhost/betgame'
 heroku_db_link = 'postgresql://oywafgwhonrxjc'\

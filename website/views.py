@@ -20,7 +20,7 @@ def home():
     winners = db.session.query(Bet, Game).filter(Bet.player_id == current_user.id)\
         .join(Game, (Game.id == Bet.game_id)).filter(Bet.away_goals == Game.away_goals, Bet.home_goals == Game.home_goals)
     return render_template("index.html", user_first_name=current_user.first_name,
-                           user_last_name=current_user.last_name, winners = winners,
+                           user_last_name=current_user.last_name, winners = winners, winner_is_empty = bool(winners),
                            games_done=games_done, games_active=games_active)
 
 
@@ -65,23 +65,26 @@ def games():
                                 away_team=away_team, enabled=True)
                 db.session.add(new_game)
                 
+                # all player and new game in assoc table
                 for player in all_players:
                     player.paying.append(new_game)
 
                 db.session.commit()
-                if(dev):
-                    connection = psycopg2.connect(local_db_link)
-                else:
-                    connection = psycopg2.connect(heroku_db_link)
 
-                cursor = connection.cursor()
-                for player in all_players:
-                    query = "UPDATE participates SET bet_is_payed = %s WHERE player_id = %s and game_id = %s"
-                    query_data = (False, player.id, new_game.id)
-                    cursor.execute(query, query_data)
-                connection.commit()
-                cursor.close()
-                connection.close()
+                # if(dev):
+                #     connection = psycopg2.connect(local_db_link)
+                # else:
+                #     connection = psycopg2.connect(heroku_db_link)
+                
+                # change bet_is_payed boolean of specific game in assoc table
+                # cursor = connection.cursor()
+                # for player in all_players:
+                #     query = "UPDATE participates SET bet_is_payed = %s WHERE player_id = %s and game_id = %s"
+                #     query_data = (False, player.id, new_game.id)
+                #     cursor.execute(query, query_data)
+                # connection.commit()
+                # cursor.close()
+                # connection.close()
                 flash("Game added successfully!", category='success')
             else:
                 flash("Nur positive Zahl für Spieltag möglich!", category='error')
