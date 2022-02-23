@@ -1,3 +1,4 @@
+from venv import create
 from website import db, local_db_link, heroku_db_link, dev
 from website.models import *
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,12 +11,21 @@ import psycopg2
 
 db.create_all()
 
-#Players
+##### add Players
+# players = []
+# def create_player_tables(email, first_name, last_name, password, role):
+#     players.append(Player(email = email, first_name = first_name))
+
+
+# db.session.add_all([players])
+
+####
+
+
 new_player = Player(email="biasi_eiter@hotmail.com", first_name="Tobias", last_name="Eiter", 
     password=generate_password_hash("1234", method='sha256'), role="ADMIN")
 new_player2 = Player(email="tomturbo@hotmail.com", first_name="Dominik", last_name="Turner", 
-     password=generate_password_hash("123456789", method='sha256'),
-role="PLAYER")
+     password=generate_password_hash("123456789", method='sha256'), role="PLAYER")
 
 #Games
 new_game = Game(gameday=11, home_team='FC Siglu St. Leonhard',
@@ -26,7 +36,7 @@ db.session.add_all([new_player, new_player2, new_game])
 new_player2.paying.append(new_game)
 
 db.session.commit()
-##
+#
 if dev:
     conn = psycopg2.connect( local_db_link)
 else:

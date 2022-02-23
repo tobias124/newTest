@@ -54,8 +54,8 @@ def spieler():
              flash('First must be greater than 1 character.', category='error')
         elif password1 != password2:
             flash('Passwords don\'t match.', category='error')
-        elif len(password1) < 7:
-            flash('Password must be longer than 6 characters.', category='error')
+        elif len(password1) < 4:
+            flash('Password must be longer than 3 characters.', category='error')
         else:
             new_player = Player(email=email, first_name=first_name, last_name=last_name, 
                 password=generate_password_hash(password1, method='sha256'), role=role)

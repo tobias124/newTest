@@ -19,9 +19,11 @@ def home():
     games_done = Game.query.filter_by(enabled=False)
     winners = db.session.query(Bet, Game).filter(Bet.player_id == current_user.id)\
         .join(Game, (Game.id == Bet.game_id)).filter(Bet.away_goals == Game.away_goals, Bet.home_goals == Game.home_goals)
+    number_of_winners = winners.count()
+    number_of_active_games = Game.query.filter_by(enabled=True).count()
     return render_template("index.html", user_first_name=current_user.first_name,
-                           user_last_name=current_user.last_name, winners = winners, winner_is_empty = bool(winners),
-                           games_done=games_done, games_active=games_active)
+                           user_last_name=current_user.last_name, winners = winners, number_of_active_games = number_of_active_games,
+                           games_done=games_done, number_of_winners = number_of_winners, games_active=games_active)
 
 
 @views.route('/bet', methods=['POST', 'GET'])
@@ -71,20 +73,20 @@ def games():
 
                 db.session.commit()
 
-                # if(dev):
-                #     connection = psycopg2.connect(local_db_link)
-                # else:
-                #     connection = psycopg2.connect(heroku_db_link)
+                if(dev):
+                    connection = psycopg2.connect(local_db_link)
+                else:
+                    connection = psycopg2.connect(heroku_db_link)
                 
                 # change bet_is_payed boolean of specific game in assoc table
-                # cursor = connection.cursor()
-                # for player in all_players:
-                #     query = "UPDATE participates SET bet_is_payed = %s WHERE player_id = %s and game_id = %s"
-                #     query_data = (False, player.id, new_game.id)
-                #     cursor.execute(query, query_data)
-                # connection.commit()
-                # cursor.close()
-                # connection.close()
+                cursor = connection.cursor()
+                for player in all_players:
+                    query = "UPDATE participates SET bet_is_payed = %s WHERE player_id = %s and game_id = %s"
+                    query_data = (False, player.id, new_game.id)
+                    cursor.execute(query, query_data)
+                connection.commit()
+                cursor.close()
+                connection.close()
                 flash("Game added successfully!", category='success')
             else:
                 flash("Nur positive Zahl für Spieltag möglich!", category='error')
@@ -118,6 +120,9 @@ def games():
 
 @views.route("/pay")
 def payment():
+
+    ### Query change -- use cursor and also participates table ... player without a bet are not shown
+
     # games and payment_information both are ordered desc for output (game one time then corresp. table)
     games = Game.query.order_by(Game.gameday.desc())
     payment_information = db.session.query(1, Game.gameday, Bet.player_id, Player.first_name,Player.last_name,\

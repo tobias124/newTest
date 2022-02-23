@@ -13,8 +13,7 @@
     src="./static/img/fussballspieler.png">
 </h4>
 <br/>
-{%if games_active %}
-
+{%if number_of_active_games %}
 <h5>Aktuelle Spiele:</h5>
 <div class="container">
     {% for game_active in games_active %}
@@ -25,12 +24,11 @@
     </div>
     {%endfor%}
   </div>
-{% endif %}
 <br/>
-
-{% if winner_is_empty %}
-<h5>Gewinner deiner Tipps:</h5>
 {% endif %}
+
+{% if number_of_winners %}
+<h5>Gewinner deiner Tipps:</h5>
 {% for game in games_done %}
 {% if loop.index is divisibleby 2 %}
 <div style="background-color:azure; padding: 8px; margin-bottom:0px">
@@ -55,5 +53,5 @@
 </table>
 </div>
 {%endfor%}
-
+{% endif %}
 {% endblock %}
