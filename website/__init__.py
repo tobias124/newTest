@@ -8,17 +8,18 @@ import psycopg2
 app = Flask(__name__)
 dev = False
 
+#Local_DB_Connection
 local_db_link = 'postgresql://postgres:SuperSecret@localhost/betgame'
-heroku_db_link = os.environ['DATABASE_URL']
-# heroku_db_link = 'postgresql://oywafgwhonrxjc'\
-#                 ':1fb26b2f767713170d4a21a7a92edcf077c34b0ebdc0f0ac5f2958005bdb35c0@ec2-52' \
-#                 '-19-170-215.eu-west-1.compute.amazonaws.com:5432/dajoliaojhf3su'
+# Herouku DB Connection 
+DATABASE_URL = os.environ['DATABASE_URL']
+
 
 app.secret_key = "dkslaljköadjlkdasfl1147cx22111###d"
 if dev:
     app.config['SQLALCHEMY_DATABASE_URI'] = local_db_link
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = heroku_db_link
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+    #psycopg2.connect(heroku_db_link)
     
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
