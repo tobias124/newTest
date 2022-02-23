@@ -1,4 +1,4 @@
-from website import db
+from website import db, local_db_link, heroku_db_link, dev
 from website.models import *
 from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
@@ -11,26 +11,26 @@ import psycopg2
 db.create_all()
 
 #Players
-# new_player = Player(email="biasi_eiter@hotmail.com", first_name="Tobias", last_name="Eiter", 
-#     password=generate_password_hash("1234", method='sha256'),
-# role="ADMIN")
-# new_player2 = Player(email="test@hotmail.com", first_name="MR", last_name="Bean", 
-#      password=generate_password_hash("1234", method='sha256'),
-# role="PLAYER")
+new_player = Player(email="biasi_eiter@hotmail.com", first_name="Tobias", last_name="Eiter", 
+    password=generate_password_hash("1234", method='sha256'), role="ADMIN")
+new_player2 = Player(email="tomturbo@hotmail.com", first_name="Dominik", last_name="Turner", 
+     password=generate_password_hash("123456789", method='sha256'),
+role="PLAYER")
 
 #Games
-# new_game = Game(gameday=11, home_team='FC Siglu St. Leonhard',
-#                                 away_team='Spg Raika Pitztal', enabled=True)
+new_game = Game(gameday=11, home_team='FC Siglu St. Leonhard',
+                                away_team='Spg Raika Pitztal', enabled=True)
 
 
-# db.session.add_all([new_player2, new_game])
-# new_player2.paying.append(new_game)
+db.session.add_all([new_player, new_player2, new_game])
+new_player2.paying.append(new_game)
 
-# db.session.commit()
-
-conn = psycopg2.connect(
-    "postgresql://postgres:SuperSecret@localhost/betgame"
-)
+db.session.commit()
+##
+if dev:
+    conn = psycopg2.connect( local_db_link)
+else:
+    conn = psycopg2.connect(heroku_db_link)
 
 cursor = conn.cursor()
 

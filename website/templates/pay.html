@@ -1,0 +1,47 @@
+{% extends 'base.html' %} {% block title %}Pay{% endblock %}
+{% block content%}
+<h1>Kassa</h1>
+
+
+{%for game in games %}
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover ">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Spieler</th>
+          <th scope="col">Betrag</th>
+          <th scope="col">Bezahlt</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="4">{{game.home_team}} vs. {{game.away_team}}<br/></td>
+        </tr>
+        {%for payment_information in payment_information %}
+        {% if game.id == payment_information.game_id %}
+    <tr>
+      <th scope="row">{{loop.index}}</th>
+      <td>Sit</td>
+      <td>Amet</td>
+      <td>Consectetur</td>
+    </tr>
+    {%endif %}
+    
+    {% endfor %}
+  </tbody>
+  <caption>
+    Status: Nicht alle bezahlt
+  </caption>
+  
+  </table>
+  </div>
+{% endfor %}
+
+
+
+   
+     
+
+{% endblock %}

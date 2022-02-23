@@ -1,10 +1,11 @@
 from flask import Blueprint, flash, render_template, request
 from flask_login import login_required, current_user
 from website.models import *
-from . import db
+from . import db, dev, local_db_link, heroku_db_link
+from website.db_operations import *
+import psycopg2
 
 views = Blueprint('views', __name__)
-
  
 
 def check_Bet_Form_Requirements(home_goals, away_goals):
@@ -18,7 +19,6 @@ def home():
     games_done = Game.query.filter_by(enabled=False)
     winners = db.session.query(Bet, Game).filter(Bet.player_id == current_user.id)\
         .join(Game, (Game.id == Bet.game_id)).filter(Bet.away_goals == Game.away_goals, Bet.home_goals == Game.home_goals)
-   
     return render_template("index.html", user_first_name=current_user.first_name,
                            user_last_name=current_user.last_name, winners = winners,
                            games_done=games_done, games_active=games_active)
@@ -47,6 +47,7 @@ def bet():
 
 @views.route('/games', methods=['POST', 'GET'])
 def games():
+    all_players = Player.query
     games = Game.query.filter_by().order_by(Game.gameday.asc())
     winners = db.session.query(Bet, Game, Player).filter()\
         .join(Game, (Game.id == Bet.game_id))\
@@ -63,7 +64,24 @@ def games():
                 new_game = Game(gameday=gameday, home_team=home_team,
                                 away_team=away_team, enabled=True)
                 db.session.add(new_game)
+                
+                for player in all_players:
+                    player.paying.append(new_game)
+
                 db.session.commit()
+                if(dev):
+                    connection = psycopg2.connect(local_db_link)
+                else:
+                    connection = psycopg2.connect(heroku_db_link)
+
+                cursor = connection.cursor()
+                for player in all_players:
+                    query = "UPDATE participates SET bet_is_payed = %s WHERE player_id = %s and game_id = %s"
+                    query_data = (False, player.id, new_game.id)
+                    cursor.execute(query, query_data)
+                connection.commit()
+                cursor.close()
+                connection.close()
                 flash("Game added successfully!", category='success')
             else:
                 flash("Nur positive Zahl für Spieltag möglich!", category='error')
@@ -93,9 +111,16 @@ def games():
             db.session.delete(game_to_delete)
             db.session.commit()
             flash("Game deleted successfully!", category='success')
-    
     return render_template('games.html', active_games=games, winners=winners, games_done=games_done)
 
-@views.route('/bezahlung')
+@views.route("/pay")
 def payment():
-    return render_template('payment.html')
+    # games and payment_information both are ordered desc for output (game one time then corresp. table)
+    games = Game.query.order_by(Game.gameday.desc())
+    payment_information = db.session.query(1, Game.gameday, Bet.player_id, Player.first_name,Player.last_name,\
+         Game.id.label("game_id"), Game.home_team, Game.away_team, func.count(Bet.id).label('payment_value'))\
+        .join(Player).join(Game, Game.id == Bet.game_id)\
+        .group_by(Game.id, Bet.player_id, Game.home_team, Game.away_team, Player.first_name, Player.last_name, Game.gameday)\
+        .order_by(Game.gameday.desc())
+   
+    return render_template("pay.html", payment_information=payment_information, games = games)
