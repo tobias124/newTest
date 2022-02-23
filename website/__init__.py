@@ -7,9 +7,10 @@ import psycopg2
 # init App
 app = Flask(__name__)
 dev = False
-DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://oywafgwhonrxjc'\
-                ':1fb26b2f767713170d4a21a7a92edcf077c34b0ebdc0f0ac5f2958005bdb35c0@ec2-52' \
-                '-19-170-215.eu-west-1.compute.amazonaws.com:5432/dajoliaojhf3su')
+
+DATABASE_URL = os.environ.get('DATABASE_URL').replace("postgres", "postgresql")
+
+
 
 local_db_link = 'postgresql://postgres:SuperSecret@localhost/betgame'
 heroku_db_link = 'postgresql://oywafgwhonrxjc'\
