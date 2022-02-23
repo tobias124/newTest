@@ -6,7 +6,7 @@ from website.db_operations import *
 import psycopg2
 
 views = Blueprint('views', __name__)
- 
+
 
 def check_Bet_Form_Requirements(home_goals, away_goals):
     return home_goals >= 0 and away_goals >= 0
@@ -22,8 +22,8 @@ def home():
     number_of_winners = winners.count()
     number_of_active_games = Game.query.filter_by(enabled=True).count()
     return render_template("index.html", user_first_name=current_user.first_name,
-                           user_last_name=current_user.last_name, winners = winners, number_of_active_games = number_of_active_games,
-                           games_done=games_done, number_of_winners = number_of_winners, games_active=games_active)
+                           user_last_name=current_user.last_name, winners=winners, number_of_active_games=number_of_active_games,
+                           games_done=games_done, number_of_winners=number_of_winners, games_active=games_active)
 
 
 @views.route('/bet', methods=['POST', 'GET'])
@@ -66,7 +66,7 @@ def games():
                 new_game = Game(gameday=gameday, home_team=home_team,
                                 away_team=away_team, enabled=True)
                 db.session.add(new_game)
-                
+
                 # all player and new game in assoc table
                 for player in all_players:
                     player.paying.append(new_game)
@@ -77,7 +77,7 @@ def games():
                     connection = psycopg2.connect(local_db_link)
                 else:
                     connection = psycopg2.connect(heroku_db_link)
-                
+
                 # change bet_is_payed boolean of specific game in assoc table
                 cursor = connection.cursor()
                 for player in all_players:
@@ -92,7 +92,7 @@ def games():
                 flash("Nur positive Zahl für Spieltag möglich!", category='error')
         # Edit Game Data:
         elif request.form.get('edit_game_const') == '1' and (request.form.get('home_goals_result') != "" and request.form.get('away_goals_result') != ""):
-             if request.form.get('home_goals_result').isnumeric() and request.form.get('away_goals_result').isnumeric():
+            if request.form.get('home_goals_result').isnumeric() and request.form.get('away_goals_result').isnumeric():
                 home_goals_result = int(request.form.get('home_goals_result'))
                 away_goals_result = int(request.form.get('away_goals_result'))
                 current_game = int(request.form.get('current_game'))
@@ -100,15 +100,15 @@ def games():
                 game_to_update.home_goals = home_goals_result
                 game_to_update.away_goals = away_goals_result
                 game_to_update.enabled = False
-                #save winner ??
+                # save winner ??
                 db.session.commit()
                 flash("Game updated successfully!", category='success')
-             else:
+            else:
                 flash("Nur positive Zahleingaben möglich", category="error")
         # Delete Game
         elif request.form.get('delete') == '1':
             current_game = int(request.form.get('current_game'))
-            bets_to_delete = Bet.query.filter_by(game_id = current_game)
+            bets_to_delete = Bet.query.filter_by(game_id=current_game)
             game_to_delete = Game.query.get(current_game)
             # Delete Bets
             for bets in bets_to_delete:
@@ -118,17 +118,36 @@ def games():
             flash("Game deleted successfully!", category='success')
     return render_template('games.html', active_games=games, winners=winners, games_done=games_done)
 
+
 @views.route("/pay")
 def payment():
-
-    ### Query change -- use cursor and also participates table ... player without a bet are not shown
-
+    player_amount = Player.query.count()
     # games and payment_information both are ordered desc for output (game one time then corresp. table)
     games = Game.query.order_by(Game.gameday.desc())
-    payment_information = db.session.query(1, Game.gameday, Bet.player_id, Player.first_name,Player.last_name,\
-         Game.id.label("game_id"), Game.home_team, Game.away_team, func.count(Bet.id).label('payment_value'))\
-        .join(Player).join(Game, Game.id == Bet.game_id)\
-        .group_by(Game.id, Bet.player_id, Game.home_team, Game.away_team, Player.first_name, Player.last_name, Game.gameday)\
-        .order_by(Game.gameday.desc())
-   
-    return render_template("pay.html", payment_information=payment_information, games = games)
+    db_connection = psycopg2.connect(heroku_db_link)
+    cursor = db_connection.cursor()
+    # 0 Betrag, 1 home_team, 2 away team, 3 bet_is_payed, 4 player_first_name, 5 player_last_name, 6 game_id 
+    cursor.execute("\
+Select *\
+FROM\
+(\
+	Select CASE WHEN Count(g.id) < 5 THEN 5 ELSE COUNT(g.id) END as betrag, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name, g.id as game_id\
+	FROM participates as p join Player as pl on p.player_id = pl.id join Game as g on g.id = p.game_id\
+		join bet as b on b.player_id = pl.id and b.game_id = g.id\
+	GROUP BY g.id, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name\
+        \
+	UNION ALL\
+        \
+	Select CASE WHEN Count(g.id) < 5 THEN 5 ELSE COUNT(g.id) END as Betrag, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name, g.id as game_id\
+	FROM participates as p join Player as pl on p.player_id = pl.id join Game as g on g.id = p.game_id left join bet\
+		on pl.id = bet.player_id and g.id = bet.game_id\
+	Where bet.id is NULL\
+	GROUP BY g.id, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name\
+) as x\
+	ORDER BY x.game_id desc\
+    ")
+    payment_information = cursor.fetchall()
+    cursor.close()
+    db_connection.close()
+
+    return render_template("pay.html", payment_information=payment_information, games=games, player_amount=player_amount)

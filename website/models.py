@@ -23,12 +23,8 @@ class Player(UserMixin, db.Model):
     paying = db.relationship('Game', secondary = participates, backref='payers')
     # PLAYER AND GAME REL
 
-    def __init__(self, first_name, last_name, password, email, role):
-        self.first_name = first_name
-        self.last_name = last_name
-        self.password = password
-        self.email = email
-        self.role = role
+    def __init__(self, **kwargs):
+      super().__init__(**kwargs)
 
 
 # Game
@@ -42,7 +38,7 @@ class Game(db.Model):
     away_goals = db.Column(db.Integer)
     enabled = db.Column(db.Boolean)
     bets = db.relationship('Bet') # 1 to Many Relation
-    
+
     def __init__(self, **kwargs):
        super().__init__(**kwargs)
 

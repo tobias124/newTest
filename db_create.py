@@ -38,7 +38,7 @@ new_player2.paying.append(new_game)
 db.session.commit()
 #
 if dev:
-    conn = psycopg2.connect( local_db_link)
+    conn = psycopg2.connect(local_db_link)
 else:
     conn = psycopg2.connect(heroku_db_link)
 
