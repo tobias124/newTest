@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, render_template, request
+from flask import Blueprint, flash, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from website.models import *
 from . import db, dev, local_db_link, heroku_db_link
@@ -126,6 +126,7 @@ def payment():
     player_amount = Player.query.count()
     # games and payment_information both are ordered desc for output (game one time then corresp. table)
     games = Game.query.order_by(Game.gameday.desc())
+    game_amount = games.count()
     db_connection = psycopg2.connect(heroku_db_link)
     cursor = db_connection.cursor()
     # 0 Betrag, 1 home_team, 2 away team, 3 bet_is_payed, 4 player_first_name, 5 player_last_name, 6 game_id, 7 pl.id
@@ -151,10 +152,36 @@ FROM\
     ORDER BY x.game_id desc\
     ")
     payment_information = cursor.fetchall()
+    
+    cursor.execute("Select g.id as game_id\
+	FROM game as g join participates as p on g.id = p.game_id\
+	group by g.id, p.bet_is_payed\
+	having bet_is_payed = false")
+    
+    games_not_payed = [list(i) for i in cursor.fetchall()]
+    games_not_payed = [item for sublist in games_not_payed for item in sublist]
     cursor.close()
     db_connection.close()
-    if request.method == 'POST':
-            print(request.form.getlist('payment_checkbox')[0][0])      
-
-    return render_template("pay.html", payment_information=payment_information, games=games, player_amount=player_amount)
+    if request.method == 'POST': 
+        # game id | Player id - iterate amoutn of game | player
+        data_pay_form = request.form.getlist('payment_checkbox')     
+ 
+        if(data_pay_form):
+            # Set up DB connection
+            db_connection = connect_psycopg2(heroku_db_link)
+            cursor = db_connection.cursor()
+            query ="UPDATE participates SET bet_is_payed = true WHERE game_id = %s AND player_id = %s"
+            # update all
+            for data in data_pay_form:  
+                data = data.split(",")   
+                # print(data)
+                query_data = (data[0], data[1])
+                cursor.execute(query, query_data)
+            db_connection.commit()
+            #Close DB Conn after execution
+            cursor.close()
+            db_connection.close()
+        flash("Changed successfully!", category='success')
+        return redirect(url_for('views.payment'))
+    return render_template("pay.html", payment_information=payment_information, games_not_payed = games_not_payed, games=games, player_amount=player_amount)
  

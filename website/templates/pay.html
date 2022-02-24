@@ -1,12 +1,13 @@
 {% extends 'base.html' %} {% block title %}Pay{% endblock %}
 {% block content%}
 <h1>Kassa</h1>
-
+{{games_not_payed}}
 <style>
   .table td, .table th {
-    padding: 0.25rem;
+    padding: 0.28rem;
     vertical-align: top;
     border-top: 1px solid #dee2e6;
+    height: 40px;
 }
   input.largerCheckbox {
     width: 20px;
@@ -60,13 +61,14 @@
       </td>
       <td scope="row">
         <form method="POST">
-          <input type="checkbox" class="largerCheckbox" value="{{payment_info[6]}},{{payment_info[7]}}" name="payment_checkbox" style="width: 20px"/>
+          <input type="checkbox" class="largerCheckbox" value="{{payment_info[6]}}, {{payment_info[7]}}" name="payment_checkbox" style="width: 20px"/>
       </td>
         {% else %}
         <svg xmlns="http://www.w3.org/2000/svg" style="color: green" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
           <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
         </svg>
       </td>
+      <td></td>
         {% endif %}
       </tr>
     {%endif %}
@@ -75,7 +77,7 @@
     <tr>
       <td colspan="2">
       </td>
-      <td colspan="2">
+      <td colspan="2" >
       <button style="float: right; margin-right: 10px" type="submit" class="btn btn-success">
           <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 15px;" width="16" height="16" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0z"/>
@@ -89,7 +91,7 @@
   </form>
   </tbody>
   <caption>
-    Status: Nicht alle bezahlt <img width="15px" height="auto" style="padding-bottom: 4px;" src="./static/img/x-icon.png" alt="x">
+    Status: {% if game.id in games_not_payed %} Nicht alle bezahlt {% else %} Alle Bezahlt{%endif%} <img width="15px" height="auto" style="padding-bottom: 4px;" src="./static/img/x-icon.png" alt="x">
   </caption>
   
   </table>
