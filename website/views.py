@@ -48,6 +48,7 @@ def bet():
 
 
 @views.route('/games', methods=['POST', 'GET'])
+@login_required
 def games():
     all_players = Player.query
     games = Game.query.filter_by().order_by(Game.gameday.asc())
@@ -119,35 +120,41 @@ def games():
     return render_template('games.html', active_games=games, winners=winners, games_done=games_done)
 
 
-@views.route("/pay")
+@views.route("/pay", methods=['POST', 'GET'])
+@login_required
 def payment():
     player_amount = Player.query.count()
     # games and payment_information both are ordered desc for output (game one time then corresp. table)
     games = Game.query.order_by(Game.gameday.desc())
     db_connection = psycopg2.connect(heroku_db_link)
     cursor = db_connection.cursor()
-    # 0 Betrag, 1 home_team, 2 away team, 3 bet_is_payed, 4 player_first_name, 5 player_last_name, 6 game_id 
+    # 0 Betrag, 1 home_team, 2 away team, 3 bet_is_payed, 4 player_first_name, 5 player_last_name, 6 game_id, 7 pl.id
     cursor.execute("\
 Select *\
 FROM\
 (\
-	Select CASE WHEN Count(g.id) < 5 THEN 5 ELSE COUNT(g.id) END as betrag, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name, g.id as game_id\
-	FROM participates as p join Player as pl on p.player_id = pl.id join Game as g on g.id = p.game_id\
-		join bet as b on b.player_id = pl.id and b.game_id = g.id\
-	GROUP BY g.id, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name\
+    Select CASE WHEN Count(g.id) < 5 THEN 5 ELSE COUNT(g.id) END as betrag, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name, g.id as game_id,\
+        pl.id\
+    FROM participates as p join Player as pl on p.player_id = pl.id join Game as g on g.id = p.game_id\
+        join bet as b on b.player_id = pl.id and b.game_id = g.id\
+    GROUP BY g.id, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name, pl.id\
         \
-	UNION ALL\
+    UNION ALL\
         \
-	Select CASE WHEN Count(g.id) < 5 THEN 5 ELSE COUNT(g.id) END as Betrag, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name, g.id as game_id\
-	FROM participates as p join Player as pl on p.player_id = pl.id join Game as g on g.id = p.game_id left join bet\
-		on pl.id = bet.player_id and g.id = bet.game_id\
-	Where bet.id is NULL\
-	GROUP BY g.id, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name\
+    Select CASE WHEN Count(g.id) < 5 THEN 5 ELSE COUNT(g.id) END as Betrag, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name, g.id as game_id,\
+        pl.id\
+    FROM participates as p join Player as pl on p.player_id = pl.id join Game as g on g.id = p.game_id left join bet\
+        on pl.id = bet.player_id and g.id = bet.game_id\
+    Where bet.id is NULL\
+    GROUP BY g.id, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name, pl.id\
 ) as x\
-	ORDER BY x.game_id desc\
+    ORDER BY x.game_id desc\
     ")
     payment_information = cursor.fetchall()
     cursor.close()
     db_connection.close()
+    if request.method == 'POST':
+            print(request.form.getlist('payment_checkbox')[0][0])      
 
     return render_template("pay.html", payment_information=payment_information, games=games, player_amount=player_amount)
+ 
