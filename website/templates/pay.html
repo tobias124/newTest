@@ -4,7 +4,7 @@
 
 <style>
   .table td, .table th {
-    padding: 0.75rem;
+    padding: 0.25rem;
     vertical-align: top;
     border-top: 1px solid #dee2e6;
 }
@@ -18,11 +18,12 @@
     background-color: #28a745;
     border-color: #28a745;
   }
+
   .btn-success {
   color: #fff;
   background-color: #218838;
   border-color: #1e7e34;
-}
+  }
 </style>
 
 <!-- 0 Betrag, 1 home_team, 2 away team, 3 bet_is_payed, 4 player_first_name, 5 player_last_name, 6 game_id, 7 pl.id-->
@@ -33,13 +34,12 @@
       <thead>
         <tr>
           {% if loop.index is divisibleby 2 %}
-            <th style="background-color: #b6f3f3" colspan="5">Tipp Bezahlung <br/> {{game.gameday}}. {{game.home_team}} vs. {{game.away_team}}<br/></th>
+            <th style="background-color: #b6f3f3" colspan="5">{{game.gameday}}. {{game.home_team}} vs. {{game.away_team}}<br/></th>
             {% else %}
-            <th style="background-color: #ffe7c6" colspan="5">Tipp Bezahlung <br/> {{game.gameday}}. {{game.home_team}} vs. {{game.away_team}}<br/></th>
+            <th style="background-color: #ffe7c6" colspan="5">{{game.gameday}}. {{game.home_team}} vs. {{game.away_team}}<br/></th>
           {% endif %}
         </tr>
         <tr>
-          <th scope="col">#</th>
           <th scope="col">Spieler</th>
           <th scope="col">Betrag</th>
           <th scope="col">Status</th>
@@ -50,33 +50,34 @@
         {%for payment_info in payment_information %}
         {% if game.id == payment_info[6] %}
     <tr>
-      <th scope="row">{{loop.index0 % player_amount}}</th>
-      <td>{{payment_info[4]}} {{payment_info[5]}}</td>
-      <td>{{payment_info[0]}} €</td>
-      <td>
+      <td scope="row">{{payment_info[4]}} {{payment_info[5]}}</td>
+      <td scope="row">{{payment_info[0]}} €</td>
+      <td scope="row">
         {% if not payment_info[3] %}
         <svg xmlns="http://www.w3.org/2000/svg" style="color: rgb(206, 0, 0);" width="20px" height="20px" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
         </svg>
       </td>
-      <td>
+      <td scope="row">
         <form method="POST">
-          <input type="checkbox" class="largerCheckbox" value="{{payment_info[6]}},{{payment_info[7]}}" name="payment_checkbox" style="width: 100px"/>
+          <input type="checkbox" class="largerCheckbox" value="{{payment_info[6]}},{{payment_info[7]}}" name="payment_checkbox" style="width: 20px"/>
       </td>
         {% else %}
         <svg xmlns="http://www.w3.org/2000/svg" style="color: green" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
           <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
         </svg>
-      <td>
+      </td>
         {% endif %}
-    </tr>
+      </tr>
     {%endif %}
 
     {% endfor %}
     <tr>
-      <td colspan="5">
-      <button style="float: right; margin-right: 20px" type="submit" class="btn btn-success">
-          <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px;" width="16" height="16" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
+      <td colspan="2">
+      </td>
+      <td colspan="2">
+      <button style="float: right; margin-right: 10px" type="submit" class="btn btn-success">
+          <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 15px;" width="16" height="16" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0z"/>
             <path d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1h-.003zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195l.054.012z"/>
             <path d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083c.058-.344.145-.678.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1H1z"/>
