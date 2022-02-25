@@ -17,7 +17,7 @@ class Player(UserMixin, db.Model):
     first_name = db.Column(db.String(200))
     last_name = db.Column(db.String(200))
     password = db.Column(db.String(200))
-    email = db.Column(db.String(200), unique=True)
+    username = db.Column(db.String(200), unique=True)
     role = db.Column(db.String(20))
     bets = db.relationship('Bet') # 1 to Many Relation
     paying = db.relationship('Game', secondary = participates, backref='payers')
@@ -37,6 +37,7 @@ class Game(db.Model):
     home_goals = db.Column(db.Integer)
     away_goals = db.Column(db.Integer)
     enabled = db.Column(db.Boolean)
+    bet_lock = db.Column(db.Boolean, default=False)
     bets = db.relationship('Bet') # 1 to Many Relation
 
     def __init__(self, **kwargs):

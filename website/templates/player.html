@@ -2,35 +2,22 @@
 content %}
 {% if current_user.role == "ADMIN" %}
 <br/>
-<button class="btn btn-primary" onclick="showHideElement()" type="button">Spieler anlegen</button>
+<button class="btn btn-primary" onclick="showHideElement('signup')" type="button">Spieler anlegen</button>
 
-<script type="text/javascript">
-  function showHideElement(){
-    var x = document.getElementById('signup');
-    if (x.style.display === 'none')
-    {
-      x.style.display = 'block';
-    } else
-    {
-      x.style.display = 'none';
-    }
-  }
-</script>
 <br/>
-
 
 <div id="signup" style="display: none;">
 <form method="POST" >
   <br/>
   <h3 align="center">Sign Up</h3>
   <div class="form-group">
-    <b><label for="email">E-Mail</label></b>
+    <b><label for="username">Benutzername</label></b>
     <input
-      type="email"
+      type="username"
       class="form-control"
-      id="email"
-      name="email"
-      placeholder="E-mail eingeben"
+      id="username"
+      name="username"
+      placeholder="Benutzername eingeben"
     />
   </div>
   <div class="form-group">
@@ -87,7 +74,8 @@ content %}
     <th scope="col">#</th>
     <th scope="col">Vorname</th>
     <th scope="col">Nachname</th>
-    <th scope="col">E-Mail</th>
+    <th scope="col">Benutzername</th>
+    <th scope="col"></th>
   </tr>
 </thead>
 {% for player in players %}
@@ -96,7 +84,10 @@ content %}
       <th scope="row">{{loop.index}}</th>
       <td>{{ player.first_name }}</td>
       <td>{{ player.last_name }}</td>
-      <td>{{ player.email }}</td>
+      <td>{{ player.username }}</td>
+      <td>
+        <a href = "/delete/{{player.id}}" class="btn btn-outline-danger btn-sm">Delete</a>
+      </td>
     </tr>
   </tbody>
 {% endfor %}
