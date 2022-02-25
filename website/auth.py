@@ -36,7 +36,13 @@ def logout():
     logout_user()
     return redirect(url_for('auth.login'))
 
-
+@auth.route('/edit/<int:id>')
+@login_required
+def edit(id):
+    if current_user.role == "ADMIN":
+        player_to_delete = Player.query.get_or_404(id)
+    return render_template('editplayer.html')
+        
 @auth.route('/delete/<int:id>')
 @login_required
 def delete(id):

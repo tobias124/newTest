@@ -1,4 +1,4 @@
-/* html, body{
+html, body{
     padding: 0;
     margin: 0;
     height: 100%;
@@ -20,25 +20,6 @@
     width: 100%;
     bottom: 0;
     left: 0;
-} */
-
-#table_home{
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 0rem;
-}
-
-#table_home td{
-    max-width: 800px;
-    padding: 0.80rem;
 }
 
 
-#bet_table td{
-    padding: 0.25rem;
-}
-
-#current_bet_table th td{
-    padding: 0.25rem;
-}
