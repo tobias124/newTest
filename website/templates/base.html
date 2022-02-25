@@ -46,7 +46,6 @@
         <a class="navbar-brand" id="logout" href="/logout">Logout </a>
       </nav>
       {% endif %}
-      
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
           {% for category, message in messages %}
@@ -68,7 +67,7 @@
           {% endfor%}
         {% endif %}
       {% endwith %}
-    
+    <div id="wrapper">
       <div id="site-container" class="container">
         {% block content %}
         {% endblock %}
@@ -98,7 +97,7 @@
 
     {% block footer %}
       <!-- Footer -->
-<footer class="bg-dark text-center ">
+<footer class="bg-dark text-center" id="footer">
   <!-- Grid container -->
   <div class="container p-4">
 
@@ -158,6 +157,7 @@
 
 </footer>
 <!-- Footer -->
+</div>
     {% endblock footer %}
   </body>
 

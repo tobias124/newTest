@@ -8,8 +8,8 @@ import psycopg2
 app = Flask(__name__)
 
 # Deploying on heroku dev = FALSE and use_heroku_db_localy = False
-dev = False
-use_heroku_db_locally = False
+dev = True
+use_heroku_db_locally = True
 
 local_db_link = 'postgresql://postgres:SuperSecret@localhost/betgame'
 
