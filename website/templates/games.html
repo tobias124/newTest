@@ -71,7 +71,18 @@
 
     <tbody>
       <tr>
-        <td><b>{{game.gameday}}. Spieltag</b><img src="./static/img/lock.png" alt="locked">
+        <td>
+          <b>{{game.gameday}}. Spieltag</b>
+          {%if game.enabled%}
+          <a href = "/lockbet/{{game.id}}">
+          {%endif%}
+          
+          {%if game.bet_lock %}
+            <img src="./static/img/lock.png" style="margin-left: 4px;" width="20px" height="auto" alt="lock">
+          {% else %}
+            <img src="./static/img/lock-open.png" style="margin-left: 4px;" width="20px" height="auto" alt="lock">
+          {% endif %}
+          </a>
           <br/>
           {{game.home_team}} : {{game.away_team}}
         </td>

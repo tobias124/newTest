@@ -1,0 +1,214 @@
+25
+0
+0
+0
+0
+25
+Philipp Eckhart
+Philipp Eckhart
+11
+0
+0
+0
+0
+3
+Günther Eiter
+Günther Eiter
+6
+1
+0
+0
+0
+17
+Tobias Eiter
+Tobias Eiter
+8
+3
+0
+0
+2
+06
+Marc-Philipp Fink
+Marc-Philipp Fink
+0
+0
+0
+0
+0
+27
+Fabian Flir
+Fabian Flir
+1
+0
+0
+0
+0
+ET
+Stefan Gabl
+Stefan Gabl
+11
+0
+0
+0
+0
+07
+Patrick Gastl
+Patrick Gastl
+1
+0
+0
+0
+0
+27
+Utku Girgin
+Utku Girgin
+10
+0
+0
+0
+2
+08
+Jeremias Haueis
+Jeremias Haueis
+10
+1
+0
+0
+2
+ET
+Simon Horn
+Simon Horn
+0
+0
+0
+0
+0
+09
+Gregor Jäger
+Gregor Jäger
+9
+2
+0
+0
+4
+18
+Jürgen Köll
+Jürgen Köll
+10
+1
+0
+0
+7
+12
+Simon Lentsch
+Simon Lentsch
+0
+0
+0
+0
+0
+15
+Manuel Mark
+Manuel Mark
+8
+3
+0
+1
+2
+27
+Birol Neseli
+Birol Neseli
+4
+0
+0
+0
+1
+22
+Florian Pertl
+Florian Pertl
+9
+0
+0
+0
+0
+07
+Daniel Santeler
+Daniel Santeler
+8
+1
+0
+0
+1
+04
+Markus Scholz
+Markus Scholz
+12
+5
+0
+0
+2
+11
+Andreas Schöpf
+Andreas Schöpf
+9
+1
+0
+1
+3
+19
+Phillip Schöpf
+Phillip Schöpf
+7
+0
+0
+0
+1
+24
+Dominik Stoll
+Dominik Stoll
+12
+1
+0
+0
+3
+10
+Simon Stoll
+Simon Stoll
+10
+1
+0
+0
+2
+20
+Dominik Thurner
+Dominik Thurner
+12
+0
+0
+0
+3
+24
+Mathias Thöni
+Mathias Thöni
+1
+0
+0
+0
+0
+17
+Marco Thünauer
+Marco Thünauer
+8
+0
+0
+0
+0
+14
+Mathias Walch
+Mathias Walch
+12
+10
+0
+0
+3
+T

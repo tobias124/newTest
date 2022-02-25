@@ -30,24 +30,33 @@
 </style>
 
 
-<!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">  
-  <span class="navbar-toggler-icon"></span>
-</button>
-     <div class="collapse navbar-collapse" id="navbarResponsive"> -->
+<script>
+  function changeIcon(id)
+  { 
+    var image = document.getElementById(id)
+    if(image.src.match("./static/img/dropdown-icon.png") || image.src.match("./static/img/dropdown-icon.png") ){
+      document.getElementById(id).src="./static/img/dropdown-icon-rotated.png";
+    }
+    else
+    {
+      document.getElementById(id).src="./static/img/dropdown-icon.png";
+    }
+    }
+  </script>
 
 <h3>Spiele</h3>
 {%for game in games %}
 
 <div class="table-responsive">
   {% if loop.index is divisibleby 2 %}
-  <button class="" style="background-color: #b6f3f3; height: 60px; width: 100%; text-align: left; border: none" type="button" data-toggle="collapse" 
+  <button onclick="changeIcon('dropdown{{loop.index}}')" style="background-color: #6bfbfb; height: 60px; width: 100%; text-align: left; border: none" type="button" data-toggle="collapse" 
     data-target="#header{{loop.index}}" aria-controls="navbarToggleExternalContent" aria-expanded="false"
     aria-label="Toggle navigation">  
-  <b>{{game.gameday}}. {{game.home_team}} vs. {{game.away_team}}</b><img src="./static/img/dropdown-icon.png" width="20px" height="auto">
+  <b>{{game.gameday}}. {{game.home_team}} vs. {{game.away_team}}</b><img id="dropdown{{loop.index}}" style="margin-left: 5px" src="./static/img/dropdown-icon.png" width="17px" height="auto">
     {% else %}
-    <button class="" style="background-color: #ffe7c6; height: 60px; width: 100%; text-align: left; border: none" type="button" data-toggle="collapse" 
+    <button onclick="changeIcon('dropdown{{loop.index}}')" style="background-color: #ffb44c; height: 60px; width: 100%; text-align: left; border: none" type="button" data-toggle="collapse" 
     data-target="#header{{loop.index}}" aria-controls="navbarToggleExternalContent" aria-expanded="false"
-    aria-label="Toggle navigation">  <b>{{game.gameday}}. {{game.home_team}} vs. {{game.away_team}}</b>
+    aria-label="Toggle navigation">  <b>{{game.gameday}}. {{game.home_team}} vs. {{game.away_team}}</b><img id="dropdown{{loop.index}}" style="margin-left: 5px" src="./static/img/dropdown-icon.png" width="17px" height="auto">
     {% endif %}
   </button>
   <br/>

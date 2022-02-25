@@ -30,7 +30,7 @@ def home():
 @login_required
 def bet():
     bets = Bet.query.filter_by(player_id=current_user.id)
-    games = Game.query.filter_by(enabled=True)
+    games = Game.query.filter_by(enabled=True).filter_by(bet_lock = False)
     if request.method == 'POST':
         participant = request.form.get('participant')
         home_goals = int(request.form.get('home_goals'))
@@ -46,6 +46,22 @@ def bet():
             flash("Negative Anzahl Tore nicht möglich", category='error')
     return render_template("bet.html", name=current_user.first_name, bets=bets, active_games=games)
 
+@views.route('/lockbet/<int:id>')
+@login_required
+def lockbet(id):
+    if current_user.role == "ADMIN":
+        game_to_change_lock = Game.query.get_or_404(id)
+        if not game_to_change_lock.bet_lock:
+            game_to_change_lock.bet_lock = True
+        else:
+            game_to_change_lock.bet_lock = False
+        try:
+            db.session.commit()
+            return redirect(url_for('views.games'))
+        except:
+            return "There was a problem changing bet status!"
+    else:
+        return redirect(url_for('views.home'))
 
 @views.route('/games', methods=['POST', 'GET'])
 @login_required
@@ -102,6 +118,7 @@ def games():
                     game_to_update.home_goals = home_goals_result
                     game_to_update.away_goals = away_goals_result
                     game_to_update.enabled = False
+                    game_to_update.bet_lock = True
                     # save winner ??
                     db.session.commit()
                     flash("Game updated successfully!", category='success')
