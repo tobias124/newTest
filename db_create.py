@@ -7,7 +7,7 @@ import psycopg2
 
 
 
-# db.create_all()
+db.create_all()
 
 # new_player = Player(username="TobiasEiter", first_name="Tobias", last_name="Eiter", 
 #     password=generate_password_hash("1234", method='sha256'), role="ADMIN")
@@ -54,8 +54,16 @@ with open('generated_data.csv', 'r', encoding='utf8') as csvfile:
 
     for player in reader:
         player_data.append(player)
-     
 
-     
-new_player = Player(username="TobiasEiter", first_name="Tobias", last_name="Eiter", 
-     password=generate_password_hash("1234", method='sha256'), role="ADMIN")
+#players = []
+
+for player in player_data:
+    newPlayer = Player(username=player[0]+player[1], first_name=player[0], last_name=player[1],
+    password=generate_password_hash(player[3], method='sha256'), role=player[4])
+    #players.append[newPlayer]
+    db.session.add(newPlayer)
+
+db.session.commit()
+
+# new_player = Player(username="TobiasEiter", first_name="Tobias", last_name="Eiter", 
+#      password=generate_password_hash("1234", method='sha256'), role="ADMIN")

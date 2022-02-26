@@ -36,12 +36,41 @@ def logout():
     logout_user()
     return redirect(url_for('auth.login'))
 
-@auth.route('/edit/<int:id>')
+@auth.route('/edit/<int:id>', methods=['POST', 'GET'])
 @login_required
 def edit(id):
-    if current_user.role == "ADMIN":
-        player_to_delete = Player.query.get_or_404(id)
-    return render_template('editplayer.html')
+    player_to_edit = Player.query.get_or_404(id)
+    if current_user.role == "ADMIN" or current_user.id == id:
+        if request.method == "POST":
+            new_username = request.form.get("username")
+            other_player = Player.query.filter(Player.username == new_username and Player.id != id).first()
+            password1 = request.form.get("password1")
+            password2 = request.form.get("password2")
+            
+            # if new username != current username
+            if new_username != player_to_edit.username:
+                if other_player:
+                    flash("Benutzername ist leider schon vergeben!", category='error')
+                    return render_template('editplayer.html', player_to_edit = player_to_edit)
+                elif len(new_username) < 4:
+                    flash('Benutzername muss mehr als 3 Zeichen haben.', category='error')
+                    return render_template('editplayer.html', player_to_edit = player_to_edit)
+            
+            if len(password1) != 0 and len(password2) != 0:
+                if password1 != password2:
+                    flash('Passwords don\'t match.', category='error')
+                    return render_template('editplayer.html', player_to_edit = player_to_edit)
+                elif len(password1) < 4:
+                    flash('Passwort muss länger sein als 3 Zeichen.', category='error')
+                    return render_template('editplayer.html', player_to_edit = player_to_edit)
+                
+            if new_username != player_to_edit.username or (len(password1) != 0 and len(password2) != 0):
+                player_to_edit.username = new_username
+                player_to_edit.password=generate_password_hash(password1, method='sha256')
+                db.session.commit()
+                flash('Daten erfolgreich geändert!', category='success')
+                
+        return render_template('editplayer.html', player_to_edit = player_to_edit)
         
 @auth.route('/delete/<int:id>')
 @login_required
@@ -71,15 +100,15 @@ def player():
             role = "PLAYER"
             player = Player.query.filter_by(username=username).first()
             if player:
-                flash('username already exists.', category='error')
+                flash('Benutzername existiert bereits.', category='error')
             elif len(username) < 4:
-                flash('username must be greater than 3 characters.', category='error')
+                flash('Benutzername muss mehr als 3 Zeichen haben.', category='error')
             elif len(first_name) < 2:
-                flash('First must be greater than 1 character.', category='error')
+                flash('Vorname muss länger sein als 1 Zeichen.', category='error')
             elif password1 != password2:
                 flash('Passwords don\'t match.', category='error')
             elif len(password1) < 4:
-                flash('Password must be longer than 3 characters.', category='error')
+                flash('Passwort muss länger sein als 3 Zeichen.', category='error')
             else:
                 new_player = Player(username=username, first_name=first_name, last_name=last_name, 
                     password=generate_password_hash(password1, method='sha256'), role=role)

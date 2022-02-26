@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block title %}Pay{% endblock %}
+{% extends 'base-with-footer.html' %} {% block title %}Pay{% endblock %}
 {% block content%}
 <h1>Kassa</h1>
 
@@ -48,17 +48,24 @@
 {%for game in games %}
 
 <div class="table-responsive">
-  {% if loop.index is divisibleby 2 %}
-  <button onclick="changeIcon('dropdown{{loop.index}}')" style="background-color: #6bfbfb; height: 60px; width: 100%; text-align: left; border: none" type="button" data-toggle="collapse" 
+  {% if loop.index0 is divisibleby 3 %}
+  <button onclick="changeIcon('dropdown{{loop.index}}')" style="background-color: #1ad1d1; height: 60px; width: 100%; text-align: left; border: none" type="button" data-toggle="collapse" 
     data-target="#header{{loop.index}}" aria-controls="navbarToggleExternalContent" aria-expanded="false"
     aria-label="Toggle navigation">  
+    <b>{{game.gameday}}. {{game.home_team}} vs. {{game.away_team}}</b><img id="dropdown{{loop.index}}" style="margin-left: 5px" src="./static/img/dropdown-icon.png" width="17px" height="auto">
+  {% elif loop.index0 is divisibleby 2 %}
+  <button onclick="changeIcon('dropdown{{loop.index}}')" style="background-color: #007bff; height: 60px; width: 100%; text-align: left; border: none" type="button" data-toggle="collapse" 
+  data-target="#header{{loop.index}}" aria-controls="navbarToggleExternalContent" aria-expanded="false"
+  aria-label="Toggle navigation">  
   <b>{{game.gameday}}. {{game.home_team}} vs. {{game.away_team}}</b><img id="dropdown{{loop.index}}" style="margin-left: 5px" src="./static/img/dropdown-icon.png" width="17px" height="auto">
     {% else %}
-    <button onclick="changeIcon('dropdown{{loop.index}}')" style="background-color: #ffb44c; height: 60px; width: 100%; text-align: left; border: none" type="button" data-toggle="collapse" 
+    <button onclick="changeIcon('dropdown{{loop.index}}')" style="background-color: #c0ff00; height: 60px; width: 100%; text-align: left; border: none" type="button" data-toggle="collapse" 
     data-target="#header{{loop.index}}" aria-controls="navbarToggleExternalContent" aria-expanded="false"
     aria-label="Toggle navigation">  <b>{{game.gameday}}. {{game.home_team}} vs. {{game.away_team}}</b><img id="dropdown{{loop.index}}" style="margin-left: 5px" src="./static/img/dropdown-icon.png" width="17px" height="auto">
     {% endif %}
-  </button>
+  </button> 
+  
+
   <br/>
   <div class="collapse navbar-collapse" id="header{{loop.index}}">
   
