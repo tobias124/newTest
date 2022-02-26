@@ -67,32 +67,29 @@ content %}
 <br/>
 {% endif %}
 <h1>Spielerliste</h1>
-<div class="table-responsive"> 
-<table class="table" width=100%>
+
+<table class="table table-striped" >
 <thead>
   <tr>
     <th scope="col">#</th>
-    <th scope="col">Vorname</th>
-    <th scope="col">Nachname</th>
+    <th scope="col">Name</th>
     <th scope="col">Benutzername</th>
-    <th scope="col"></th>
+    <th scope="col" colspan="2"></th>
   </tr>
 </thead>
+<tbody>
 {% for player in players %}
-  <tbody>
     <tr>
       <th scope="row">{{loop.index}}</th>
-      <td>{{ player.first_name }}</td>
-      <td>{{ player.last_name }}</td>
+      <td>{{ player.first_name }} {{ player.last_name }}</td>
       <td>{{ player.username }}</td>
-      <td>
-        <a href = "/edit/{{player.id}}" class="btn btn-outline-sucess btn-sm">Edit</a>
+      <td style="width: 20px;"><a href = "/edit/{{player.id}}" class="btn btn-outline-success btn-sm">Edit</a></td>
+      <td style="width: 20px;">
         <a href = "/delete/{{player.id}}" class="btn btn-outline-danger btn-sm">Delete</a>
       </td>
     </tr>
-  </tbody>
 {% endfor %}
+</tbody>
 </table>
-</div>
 
 {% endblock %}
