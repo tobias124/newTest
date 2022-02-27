@@ -1,6 +1,12 @@
 {% extends "base-with-footer.html" %} {% block title %}Home{% endblock %}
 {% block content %}
 
+<style>
+  .table-sm tr {
+    text-align: left!important;
+  }
+  
+</style>
 
 <h1>
     Dashboard
@@ -13,6 +19,14 @@
     src="./static/img/fussballspieler.png">
 </h4>
 <br/>
+
+<button class="btn btn-dark btn-lg" onclick="showHideElement('glw_table')">Tabelle anzeigen</button>
+<div class="table-responsive" id="glw_table" style="display: none;">
+{% for table in glw_table %}
+{{table|safe}}
+{% endfor %}
+</div>
+
 {%if number_of_active_games %}
 <h5>Aktuelle Spiele:</h5>
 <div class="container">

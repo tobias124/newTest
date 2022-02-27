@@ -1,9 +1,17 @@
 {% extends "base-with-footer.html" %} {% block title %}Player{% endblock %} {% block
 content %}
 {% if current_user.role == "ADMIN" %}
+
+<style>
+  .table td, .table th {
+    padding: 0.3rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+</style>
+
 <br/>
 <button class="btn btn-primary" onclick="showHideElement('signup')" type="button">Spieler anlegen</button>
-
 <br/>
 
 <div id="signup" style="display: none;">
@@ -67,11 +75,11 @@ content %}
 <br/>
 {% endif %}
 <h1>Spielerliste</h1>
-
-<table class="table table-striped" >
+<div class="table-responsive">
+<table class="table-striped table" >
 <thead>
   <tr>
-    <th scope="col">#</th>
+    <th style="width: 40px" scope="col">#</th>
     <th scope="col">Name</th>
     <th scope="col">Benutzername</th>
     <th scope="col" colspan="2"></th>
@@ -91,5 +99,5 @@ content %}
 {% endfor %}
 </tbody>
 </table>
-
+</div>
 {% endblock %}

@@ -4,6 +4,9 @@ from website.models import *
 from . import db, dev, local_db_link, heroku_db_link
 from website.db_operations import *
 import psycopg2
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
 
 views = Blueprint('views', __name__)
 
@@ -21,9 +24,13 @@ def home():
         .join(Game, (Game.id == Bet.game_id)).filter(Bet.away_goals == Game.away_goals, Bet.home_goals == Game.home_goals)
     number_of_winners = winners.count()
     number_of_active_games = Game.query.filter_by(enabled=True).count()
+
+    from scrape import glw_table
+
     return render_template("index.html", user_first_name=current_user.first_name,
                            user_last_name=current_user.last_name, winners=winners, number_of_active_games=number_of_active_games,
-                           games_done=games_done, number_of_winners=number_of_winners, games_active=games_active)
+                           games_done=games_done, number_of_winners=number_of_winners, games_active=games_active, 
+                           glw_table = [glw_table.to_html (header=True, index=False, classes='table-sm table-striped')])
 
 
 @views.route('/bet', methods=['POST', 'GET'])

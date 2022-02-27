@@ -1,5 +1,13 @@
 {% extends 'base-with-footer.html' %} {% block title %}Games{% endblock %}
 {% block content%}
+<style>
+  .table td, .table th {
+    padding: 0.35rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+  }
+</style>
+
 <h1>Spiele</h1>
 <br/>
 <button class="btn btn-primary" onclick="showHideElement('add_game')" type="button">Spiel hinzufügen</button>
@@ -96,7 +104,6 @@
         <td style="width: 20px;"><br/><button  style="
             border: none;
             color: #007bff;
-       
             text-align: center;
             text-decoration: none;
             display: inline-block;
