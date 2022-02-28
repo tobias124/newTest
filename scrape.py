@@ -43,4 +43,4 @@ for team in league_table.find_all('tr'):
 
 glw_table = pd.DataFrame({'Rang':ranks, 'Mannschaft':teams, 'Spiele':games_played, 'Punkte':points})
 
-# print(dataframe)
+print(glw_table)

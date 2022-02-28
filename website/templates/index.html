@@ -5,7 +5,19 @@
   .table-sm tr {
     text-align: left!important;
   }
-  
+
+#glw_table_btn1 {
+    margin-left: 13px;
+}
+
+  #glw_table_btn2 {
+    margin-left: 43px;
+}
+
+#current_games_table td, #current_games_table th {
+  padding: 0.25rem;
+}
+
 </style>
 
 <h1>
@@ -13,60 +25,73 @@
 </h1>
 <br/>
 
-<h4><img src="./static/img/logo.png" style="padding-bottom: 5px; margin-right: 4px" width="30px" height="auto">
+<h4>
+  <img src="./static/img/logo.png" style="padding-bottom: 5px; margin-right: 4px" width="30px" height="auto">
     Hallo {{ user_first_name }}!
     <img width="30px" height="auto" style="padding-bottom: 5px;" 
     src="./static/img/fussballspieler.png">
 </h4>
 <br/>
 
-<button class="btn btn-dark btn-lg" onclick="showHideElement('glw_table')">Tabelle anzeigen</button>
+<div style="width: 300px; margin-left: auto; margin-right: auto; display: block;">
+<button id="glw_table_btn1" class="btn btn-dark btn-lg" onclick="showHideElement('glw_table')">
+  Tabelle<br/> <img style="width: 75px; height: 80px;" src="./static/img/table.png" alt="Tabelle">
+  <br/>anzeigen
+</button>
+<a style="color: white; text-decoration: none;" href="https://bet-works.herokuapp.com/bet">
+<button id="glw_table_btn2" class="btn btn-dark btn-lg" >
+  Jetzt<br/><img style="width: 75px; height: 80px" src="./static/img/bet.png">
+  <br/>tippen</a>
+</button>
+</div>
+
 <br/>
-<div class="table-responsive" id="glw_table" style="display: none;">
+<div class="table-responsive" id="glw_table" style="width: 380px; display: none; margin-left: auto; margin-right: auto;">
 {% for table in glw_table %}
 {{table|safe}}
 {% endfor %}
 </div>
-
+<br/>
 {%if number_of_active_games %}
-<h5>Aktuelle Spiele:</h5>
-<div class="container">
+
+<table id="current_games_table" class="table btn" style="text-align:left; background-color: #adb5bd">
+<h5 align="left">Aktuelle Spiele:</h5>
+
     {% for game_active in games_active %}
-    <div class="row">
-      <div class="col-sm">
-        {{game_active.home_team}} vs. {{game_active.away_team}}
-      </div>
-    </div>
+    <tr>
+       <td style="border: none!important;"> {{game_active.gameday}}. {{game_active.home_team}} vs. {{game_active.away_team}}</td>
+      </tr>
     {%endfor%}
-  </div>
+  </table>
 <br/>
 {% endif %}
 
 {% if number_of_winners %}
-<h5>Gewinner deiner Tipps:</h5>
-{% for game in games_done %}
-{% if loop.index is divisibleby 2 %}
-<div style="background-color:azure; padding: 8px; margin-bottom:0px">
-{%else%}
-<div style="background-color:cornsilk; padding: 8px;  margin-bottom:0px">
-{% endif %}
-<b>Gewinner </b><br/>{{game.home_team}} : {{game.away_team}} {{game.home_goals}} : {{game.away_goals}}<br/>
+  <h5>Gewinner deiner Tipps:</h5>
+  {% for game in games_done %}
+    {% if loop.index is divisibleby 2 %}
+      <div style="background-color:#20c997d6; padding: 8px 8px 0px 8px; margin-bottom:0px; border-radius: .25rem!important;">
+    {%else%}
+      <div style="background-color:#ff7400b8; padding: 8px 8px 0px 8px; margin-bottom:0px; border-radius: .25rem!important;">
+    {% endif %}
+    <b>Gewinner</b><br/>{{game.home_team}} : {{game.away_team}} {{game.home_goals}} : {{game.away_goals}}<br/>
 
-<table class="table" id="table_home">
-  <tr>  
-      <th style="border-top: none;">Gewinner</th>
-      <th style="border-top: none;">Tipp</th>
-    </tr>
-  {% for winner in winners %}
-    {% if winner[1].id == game.id %}
-      <tr>
-        <td style="max-width: 95px;">{{ winner[0].participant }}</td>
-        <td style="width: 45px;">{{winner[0].home_goals}} : {{winner[0].away_goals}}</td>
+    <table class="table" id="table_home">
+      <tr>  
+          <th style="border: none;">Gewinner</th>
+          <th style="border: none;">Tipp</th>
       </tr>
-    {%endif%}
-  {% endfor %}
-</table>
-</div>
-{%endfor%}
+    {% for winner in winners %}
+      {% if winner[1].id == game.id %}
+          <tr>
+            <td style="border-color: black; max-width: 95px;">{{ winner[0].participant }}</td>
+            <td style="border-color: black;">{{winner[0].home_goals}} : {{winner[0].away_goals}}</td>
+          </tr>
+      {%endif%}
+    {% endfor %}
+    </table>
+    </div>
+
+  {%endfor%}
 {% endif %}
 {% endblock %}
