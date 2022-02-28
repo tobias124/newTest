@@ -46,7 +46,7 @@
 </div>
 
 <br/>
-<div class="table-responsive" id="glw_table" style="max-width: 380px; display: none; margin-left: auto; margin-right: auto;">
+<div  id="glw_table" style="max-width: 365px; display: none; margin-left: auto; margin-right: auto;">
 {% for table in glw_table %}
 {{table|safe}}
 {% endfor %}
@@ -54,7 +54,7 @@
 <br/>
 {%if number_of_active_games %}
 
-<table id="current_games_table" class="table btn" style="text-align:left; background-color: #adb5bd">
+<table id="current_games_table" class="btn table-responsive" style="text-align:left; background-color: #adb5bd">
 <h5 align="left">Aktuelle Spiele:</h5>
 
     {% for game_active in games_active %}
