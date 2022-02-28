@@ -44,7 +44,6 @@
   <br/>tippen</a>
 </button>
 </div>
-
 <br/>
 <div id="glw_table" style="max-width: 330px; display: none; margin-left: auto; margin-right: auto;">
 {% for table in glw_table %}
@@ -63,9 +62,10 @@
       </tr>
     {%endfor%}
   </table>
-<br/>
-{% endif %}
 
+{% endif %}
+<br/>
+<br/>
 {% if number_of_winners %}
   <h5>Gewinner deiner Tipps:</h5>
   {% for game in games_done %}
