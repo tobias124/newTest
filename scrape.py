@@ -30,7 +30,7 @@ for team in league_table.find_all('tr'):
         gl_team = t.find('a', class_= "quickInfo discreetLink").text.strip()
         teams.append(gl_team)
         if gl_tableRank != None:
-            ranks.append(gl_tableRank.text.strip())
+            ranks.append(gl_tableRank.text.strip() + ".")
         if gl_gamesPlayed != None:
             games_played.append(gl_gamesPlayed.text.strip())
         if gl_points != None:
@@ -41,6 +41,7 @@ for team in league_table.find_all('tr'):
 # print(games_played)
 # print(points)
 
-glw_table = pd.DataFrame({'Rang':ranks, 'Mannschaft':teams, 'Spiele':games_played, 'Punkte':points})
+glw_table = pd.DataFrame({'R':ranks, 'Mannschaft':teams, 'Sp.':games_played, 'P':points})
 
-print(glw_table)
+print(glw_table) 
+ 
