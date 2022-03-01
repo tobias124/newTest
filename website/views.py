@@ -92,7 +92,7 @@ def games():
             # Add new game:
             if request.form.get('add_game_const') == '1':
                 gameday = request.form.get('gameday')
-                if (gameday.isnumeric()):
+                if gameday.isnumeric():
                     home_team = request.form.get('home_team')
                     away_team = request.form.get('away_team')
                     new_game = Game(gameday=gameday, home_team=home_team,

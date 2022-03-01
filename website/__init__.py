@@ -23,7 +23,7 @@ if dev and use_heroku_db_locally:
 elif not dev and not use_heroku_db_locally:
     ## WHEN RUNNING ON HEROKU (IF DATABASE URL CHANGES) 
     DATABASE_URL = os.environ.get('DATABASE_URL')
-    if DATABASE_URL is not None:
+    if DATABASE_URL != None:
         heroku_db_link = DATABASE_URL.replace("postgres", "postgresql")
 else:  # local with local db
     heroku_db_link = local_db_link
