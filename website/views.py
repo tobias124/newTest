@@ -8,6 +8,9 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
+from .db_operations import connect_psycopg2
+from .models import Game, Bet, Player
+
 views = Blueprint('views', __name__)
 
 
@@ -20,24 +23,26 @@ def check_Bet_Form_Requirements(home_goals, away_goals):
 def home():
     games_active = Game.query.filter_by(enabled=True)
     games_done = Game.query.filter_by(enabled=False)
-    winners = db.session.query(Bet, Game).filter(Bet.player_id == current_user.id)\
-        .join(Game, (Game.id == Bet.game_id)).filter(Bet.away_goals == Game.away_goals, Bet.home_goals == Game.home_goals)
+    winners = db.session.query(Bet, Game).filter(Bet.player_id == current_user.id) \
+        .join(Game, (Game.id == Bet.game_id)).filter(Bet.away_goals == Game.away_goals,
+                                                     Bet.home_goals == Game.home_goals)
     number_of_winners = winners.count()
     number_of_active_games = Game.query.filter_by(enabled=True).count()
 
     from scrape import glw_table
 
     return render_template("index.html", user_first_name=current_user.first_name,
-                           user_last_name=current_user.last_name, winners=winners, number_of_active_games=number_of_active_games,
-                           games_done=games_done, number_of_winners=number_of_winners, games_active=games_active, 
-                           glw_table = [glw_table.to_html (header=True, index=False, classes='table-sm table-striped')])
+                           user_last_name=current_user.last_name, winners=winners,
+                           number_of_active_games=number_of_active_games,
+                           games_done=games_done, number_of_winners=number_of_winners, games_active=games_active,
+                           glw_table=[glw_table.to_html(header=True, index=False, classes='table-sm table-striped')])
 
 
 @views.route('/bet', methods=['POST', 'GET'])
 @login_required
 def bet():
     bets = Bet.query.filter_by(player_id=current_user.id)
-    games = Game.query.filter_by(enabled=True).filter_by(bet_lock = False)
+    games = Game.query.filter_by(enabled=True).filter_by(bet_lock=False)
     if request.method == 'POST':
         participant = request.form.get('participant')
         home_goals = int(request.form.get('home_goals'))
@@ -52,6 +57,7 @@ def bet():
         else:
             flash("Negative Anzahl Tore nicht möglich", category='error')
     return render_template("bet.html", name=current_user.first_name, bets=bets, active_games=games)
+
 
 @views.route('/lockbet/<int:id>')
 @login_required
@@ -70,22 +76,23 @@ def lockbet(id):
     else:
         return redirect(url_for('views.home'))
 
+
 @views.route('/games', methods=['POST', 'GET'])
 @login_required
 def games():
     if current_user.role == "ADMIN":
         all_players = Player.query
         games = Game.query.filter_by().order_by(Game.gameday.asc())
-        winners = db.session.query(Bet, Game, Player).filter()\
-            .join(Game, (Game.id == Bet.game_id))\
-            .join(Player, (Bet.player_id == Player.id))\
+        winners = db.session.query(Bet, Game, Player).filter() \
+            .join(Game, (Game.id == Bet.game_id)) \
+            .join(Player, (Bet.player_id == Player.id)) \
             .filter(Bet.away_goals == Game.away_goals, Bet.home_goals == Game.home_goals)
         games_done = Game.query.filter_by(enabled=False)
         if request.method == 'POST':
             # Add new game:
             if request.form.get('add_game_const') == '1':
                 gameday = request.form.get('gameday')
-                if(gameday.isnumeric()):
+                if (gameday.isnumeric()):
                     home_team = request.form.get('home_team')
                     away_team = request.form.get('away_team')
                     new_game = Game(gameday=gameday, home_team=home_team,
@@ -98,10 +105,7 @@ def games():
 
                     db.session.commit()
 
-                    if(dev):
-                        connection = psycopg2.connect(local_db_link)
-                    else:
-                        connection = psycopg2.connect(heroku_db_link)
+                    connection = psycopg2.connect(heroku_db_link)
 
                     # change bet_is_payed boolean of specific game in assoc table
                     cursor = connection.cursor()
@@ -116,8 +120,10 @@ def games():
                 else:
                     flash("Nur positive Zahl für Spieltag möglich!", category='error')
             # Edit Game Data:
-            elif request.form.get('edit_game_const') == '1' and (request.form.get('home_goals_result') != "" and request.form.get('away_goals_result') != ""):
-                if request.form.get('home_goals_result').isnumeric() and request.form.get('away_goals_result').isnumeric():
+            elif request.form.get('edit_game_const') == '1' and (
+                    request.form.get('home_goals_result') != "" and request.form.get('away_goals_result') != ""):
+                if request.form.get('home_goals_result').isnumeric() and request.form.get(
+                        'away_goals_result').isnumeric():
                     home_goals_result = int(request.form.get('home_goals_result'))
                     away_goals_result = int(request.form.get('away_goals_result'))
                     current_game = int(request.form.get('current_game'))
@@ -146,6 +152,7 @@ def games():
     else:
         return redirect(url_for('views.home'))
 
+
 @views.route("/pay", methods=['POST', 'GET'])
 @login_required
 def payment():
@@ -156,8 +163,8 @@ def payment():
         game_amount = games.count()
         db_connection = psycopg2.connect(heroku_db_link)
         cursor = db_connection.cursor()
-        #payment table - payment information
-        # 0 Betrag, 1 home_team, 2 away team, 3 bet_is_payed, 4 player_first_name, 5 player_last_name, 6 game_id, 7 pl.id
+        # payment table - payment information 0 Betrag, 1 home_team, 2 away team, 3 bet_is_payed,
+        # 4 player_first_name, 5 player_last_name, 6 game_id, 7 pl.id
         cursor.execute("\
         Select *\
         FROM\
@@ -180,8 +187,8 @@ def payment():
             ORDER BY x.game_id desc\
         ")
         payment_information = cursor.fetchall()
-         
-        #total betrag for each game 
+
+        # total betrag for each game
         cursor.execute("\
         Select x.game_id, CAST(sum(betrag) as INTEGER) as total\
         FROM\
@@ -205,39 +212,39 @@ def payment():
         ORDER BY x.game_id desc")
         # total_payment [(game_id, total), (game_id, total)] acess with totalpayment[x][y]
         total_payment = cursor.fetchall()
-        
-        #games_not_payed - List
+
+        # games_not_payed - List
         cursor.execute("Select g.id as game_id\
         FROM game as g join participates as p on g.id = p.game_id\
         group by g.id, p.bet_is_payed\
         having bet_is_payed = false")
-        
+
         games_not_payed = [list(i) for i in cursor.fetchall()]
         games_not_payed = [item for sublist in games_not_payed for item in sublist]
         cursor.close()
         db_connection.close()
-        if request.method == 'POST': 
+        if request.method == 'POST':
             # game id | Player id - iterate amoutn of game | player
-            data_pay_form = request.form.getlist('payment_checkbox')     
-    
-            if(data_pay_form):
+            data_pay_form = request.form.getlist('payment_checkbox')
+
+            if data_pay_form:
                 # Set up DB connection
                 db_connection = connect_psycopg2(heroku_db_link)
                 cursor = db_connection.cursor()
-                query ="UPDATE participates SET bet_is_payed = true WHERE game_id = %s AND player_id = %s"
+                query = "UPDATE participates SET bet_is_payed = true WHERE game_id = %s AND player_id = %s"
                 # update all
-                for data in data_pay_form:  
-                    data = data.split(",")   
+                for data in data_pay_form:
+                    data = data.split(",")
                     # print(data)
                     query_data = (data[0], data[1])
                     cursor.execute(query, query_data)
                 db_connection.commit()
-                #Close DB Conn after execution
+                # Close DB Conn after execution
                 cursor.close()
                 db_connection.close()
             flash("Changed successfully!", category='success')
             return redirect(url_for('views.payment'))
-        return render_template("pay.html", payment_information=payment_information, 
-            games_not_payed = games_not_payed, games=games, player_amount=player_amount,
-            total_payment = total_payment)
+        return render_template("pay.html", payment_information=payment_information,
+                               games_not_payed=games_not_payed, games=games, player_amount=player_amount,
+                               total_payment=total_payment)
     return redirect(url_for('views.home'))

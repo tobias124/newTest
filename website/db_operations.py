@@ -3,6 +3,7 @@ from website.models import *
 
 import psycopg2
 
-#returns connection
+
+# returns connection
 def connect_psycopg2(link):
     return psycopg2.connect(link)

@@ -13,3 +13,9 @@ body {
     background-color: rgb(3, 83, 122);
     color: white; 
 }
+
+input#remember {
+    /* margin-left: 5px; */
+    height: 20px;
+    width: 20px;
+}
