@@ -2,7 +2,7 @@ from hashlib import sha256
 from math import remainder
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from website import db
-from website.models import Player
+from website.models import Player, Game, participates
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 import psycopg2
@@ -111,9 +111,15 @@ def player():
                 flash('Passwort muss länger sein als 3 Zeichen.', category='error')
             else:
                 new_player = Player(username=username, first_name=first_name, last_name=last_name, 
-                    password=generate_password_hash(password1, method='sha256'), role=role)
+                    password=generate_password_hash(password1, method='sha256'), role=role)  
+
                 db.session.add(new_player)
                 db.session.commit()
+                all_enabled_games = Game.query.filter_by(enabled=True)
+                for game in all_enabled_games:
+                    statement = participates.insert().values(player_id=new_player.id, game_id=game.id)
+                    db.session.execute(statement)
+                    db.session.commit()
         return render_template('player.html', current_user = current_user, players = players)
     else:
         return redirect(url_for('views.home'))
