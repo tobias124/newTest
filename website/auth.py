@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 import psycopg2
 
-from betgame.website.models import Game, participates
+
 
 auth = Blueprint('auth', __name__)
 
@@ -18,25 +18,23 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         player = Player.query.filter_by(username=username).first()
-        remember = True if request.form.get('remember') else False  # implement?
-
+        remember = True if request.form.get('remember') else False #implement?
+        
         if player:
             if check_password_hash(player.password, password):
                 login_user(player, remember=remember)
             else:
                 flash('Falsches Password, versuche es noch einmal!', category='error')
         else:
-            flash('Benutzername ' + username + ' existiert nicht!', category='error')
+            flash('Benutzername ' + username +' existiert nicht!', category='error')
     if current_user.is_authenticated:
         return redirect(url_for('views.home'))
     return render_template('login.html')
-
 
 @auth.route('/logout', methods=('POST', 'GET'))
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
-
 
 @auth.route('/edit/<int:id>', methods=['POST', 'GET'])
 @login_required
@@ -48,33 +46,32 @@ def edit(id):
             other_player = Player.query.filter(Player.username == new_username and Player.id != id).first()
             password1 = request.form.get("password1")
             password2 = request.form.get("password2")
-
+            
             # if new username != current username
             if new_username != player_to_edit.username:
                 if other_player:
                     flash("Benutzername ist leider schon vergeben!", category='error')
-                    return render_template('editplayer.html', player_to_edit=player_to_edit)
+                    return render_template('editplayer.html', player_to_edit = player_to_edit)
                 elif len(new_username) < 4:
                     flash('Benutzername muss mehr als 3 Zeichen haben.', category='error')
-                    return render_template('editplayer.html', player_to_edit=player_to_edit)
-
+                    return render_template('editplayer.html', player_to_edit = player_to_edit)
+            
             if len(password1) != 0 and len(password2) != 0:
                 if password1 != password2:
                     flash('Passwords don\'t match.', category='error')
-                    return render_template('editplayer.html', player_to_edit=player_to_edit)
+                    return render_template('editplayer.html', player_to_edit = player_to_edit)
                 elif len(password1) < 4:
                     flash('Passwort muss länger sein als 3 Zeichen.', category='error')
-                    return render_template('editplayer.html', player_to_edit=player_to_edit)
-
+                    return render_template('editplayer.html', player_to_edit = player_to_edit)
+                
             if new_username != player_to_edit.username or (len(password1) != 0 and len(password2) != 0):
                 player_to_edit.username = new_username
-                player_to_edit.password = generate_password_hash(password1, method='sha256')
+                player_to_edit.password=generate_password_hash(password1, method='sha256')
                 db.session.commit()
                 flash('Daten erfolgreich geändert!', category='success')
-
-        return render_template('editplayer.html', player_to_edit=player_to_edit)
-
-
+                
+        return render_template('editplayer.html', player_to_edit = player_to_edit)
+        
 @auth.route('/delete/<int:id>')
 @login_required
 def delete(id):
@@ -88,7 +85,6 @@ def delete(id):
             return "There was a problem deleteting that Player!"
     else:
         return redirect(url_for('views.home'))
-
 
 @auth.route('/player', methods=['POST', 'GET'])
 @login_required
@@ -114,17 +110,10 @@ def player():
             elif len(password1) < 4:
                 flash('Passwort muss länger sein als 3 Zeichen.', category='error')
             else:
-                new_player = Player(username=username, first_name=first_name, last_name=last_name,
-                                    password=generate_password_hash(password1, method='sha256'), role=role)
-
+                new_player = Player(username=username, first_name=first_name, last_name=last_name, 
+                    password=generate_password_hash(password1, method='sha256'), role=role)
                 db.session.add(new_player)
                 db.session.commit()
-                all_enabled_games = Game.query.filter_by(enabled=True)
-                for game in all_enabled_games:
-                    statement = participates.insert().values(player_id=new_player.id, game_id=game.id)
-                    db.session.execute(statement)
-                    db.session.commit()
-
-        return render_template('player.html', current_user=current_user, players=players)
+        return render_template('player.html', current_user = current_user, players = players)
     else:
         return redirect(url_for('views.home'))
