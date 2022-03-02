@@ -9,7 +9,7 @@
     border-top: 1px solid #dee2e6;
   }
 
-  .btn {
+  #bet {
       padding: 0.2rem 0.2rem;
   }
 </style>
@@ -46,11 +46,12 @@
 {% endfor %}
 </table>
 </div>
-<!--{{player_id}}-->
+
 <br/>
 <h4>Tippabgabe</h4>
 {{game.home_team }} : {{game.away_team }}
 <form method="POST">
+  <div class="table-responsive">
   <table id="bet_table" class="table">
     <thead>  
     <tr>
@@ -74,12 +75,12 @@
         </td>
         </tr>
         <tr>
-        <td  style="border: none"><button type="submit" class="btn btn-primary">Submit</button></td>
+        <td  style="border: none"><button type="submit" id="bet" class="btn btn-primary">Tippen</button></td>
         <td  style="border: none" colspan="2"></td>
         </tr>
       </tbody>
     </table>
-     
+  </div>    
 </form>
 <hr>
 <br/>

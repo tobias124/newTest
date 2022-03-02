@@ -230,7 +230,7 @@ def payment():
         ORDER BY x.game_id desc")
         # total_payment [(game_id, total), (game_id, total)] acess with totalpayment[x][y]
         total_payment = cursor.fetchall()
-        
+
         #games_not_payed - List
         cursor.execute("Select g.id as game_id\
         FROM game as g join participates as p on g.id = p.game_id\
