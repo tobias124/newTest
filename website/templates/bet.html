@@ -1,5 +1,6 @@
 {% extends 'base-with-footer.html' %} {% block title %}Tippen{% endblock %}
 {% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 <h1>Tippen</h1>
 {% for game in active_games %}
 {% set count = namespace(value=1) %} 
@@ -14,6 +15,7 @@
           <th scope="col">Name</th>
           <th scope="col">Heim</th>
           <th scope="col">Auswärts</th>
+          <th scope="col"></th>
         </tr>
       </thead>
 {% for bet in bets %}
@@ -23,6 +25,9 @@
         <td>{{bet.participant}}</td>
         <td>{{bet.home_goals}}</td>
         <td>{{bet.away_goals}}</td>
+        <td><button class="btn btn-success"><i class="bi bi-pencil-square"></i></button>
+        <button class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
+        </td>
       </tr>
   {%endif%}
 {% endfor %}
