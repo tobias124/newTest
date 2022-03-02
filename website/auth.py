@@ -82,7 +82,7 @@ def delete(id):
             db.session.commit()
             return redirect(url_for('auth.player'))
         except:
-            return "There was a problem deleteting that Player!"
+            return "Es ist ein Fehler beim Löschen aufgetreten!!"
     else:
         return redirect(url_for('views.home'))
 

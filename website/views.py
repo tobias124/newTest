@@ -33,6 +33,20 @@ def home():
                            glw_table = [glw_table.to_html (header=True, index=False, classes='table-sm table-striped')])
 
 
+@views.route('/bet-delete/<int:id>', methods=['POST', 'GET'])
+@login_required
+def delete_bet(id):
+    bet_to_delete = Bet.query.get_or_404(id)
+    if current_user.id == bet_to_delete.player_id:
+        try:
+            db.session.delete(bet_to_delete)
+            db.session.commit()
+            return redirect(url_for('views.bet'))
+        except:
+            return "Es ist ein Fehler beim Löschen aufgetreten!"
+    else:        
+        redirect(url_for('views.home'))
+
 @views.route('/bet', methods=['POST', 'GET'])
 @login_required
 def bet():
