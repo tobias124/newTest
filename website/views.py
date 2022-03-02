@@ -7,6 +7,7 @@ import psycopg2
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+from sqlalchemy import delete
 
 views = Blueprint('views', __name__)
 
@@ -147,12 +148,22 @@ def games():
                     flash("Nur positive Zahleingaben möglich", category="error")
             # Delete Game
             elif request.form.get('delete') == '1':
-                current_game = int(request.form.get('current_game'))
+                current_game = request.form.get('current_game')
                 bets_to_delete = Bet.query.filter_by(game_id=current_game)
                 game_to_delete = Game.query.get(current_game)
                 # Delete Bets
                 for bets in bets_to_delete:
                     db.session.delete(bets)
+                    db.session.commit()
+                # Delete entries in pariticpates
+                db_connection = psycopg2.connect(heroku_db_link)
+                cursor = db_connection.cursor()
+                query = "DELETE FROM participates WHERE game_id = %s"
+                cursor.execute(query, current_game)
+                db_connection.commit()
+                cursor.close()
+                db_connection.close()
+
                 db.session.delete(game_to_delete)
                 db.session.commit()
                 flash("Game deleted successfully!", category='success')

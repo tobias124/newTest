@@ -1,103 +1,128 @@
-{% extends "base-with-footer.html" %} {% block title %}Player{% endblock %} {% block
-content %}
-{% if current_user.role == "ADMIN" %}
+{% extends "base-with-footer.html" %} {% block title %}Player{% endblock %} {%
+block content %} {% if current_user.role == "ADMIN" %}
 
 <style>
-  .table td, .table th {
+  .table td,
+  .table th {
     padding: 0.3rem;
     vertical-align: top;
     border-top: 1px solid #dee2e6;
-}
+  }
 </style>
 
-<br/>
-<button class="btn btn-primary" onclick="showHideElement('signup')" type="button">Spieler anlegen</button>
-<br/>
+<br />
+<button
+  class="btn btn-primary"
+  onclick="showHideElement('signup')"
+  type="button"
+>
+  Spieler anlegen
+</button>
+<br />
 
-<div id="signup" style="display: none;">
-<form method="POST" >
-  <br/>
-  <h3 align="center">Sign Up</h3>
-  <div class="form-group">
-    <b><label for="username">Benutzername</label></b>
-    <input
-      type="username"
-      class="form-control"
-      id="username"
-      name="username"
-      placeholder="Benutzername eingeben"
-    />
-  </div>
-  <div class="form-group">
-    <b><label for="firstName">Vorname</label></b>
-    <input
-      type="text"
-      class="form-control"
-      id="firstName"
-      name="firstName"
-      placeholder="Vorname eingeben"
-    />
-  </div>
-  <div class="form-group">
-    <b><label for="lastName">Nachname</label></b>
-    <input
-      type="text"
-      class="form-control"
-      id="lastName"
-      name="lastName"
-      placeholder="Nachname eingeben"
-    />
-  </div>
-  <div class="form-group">
-    <b><label for="password1">Passwort</label></b>
-    <input
-      type="password"
-      class="form-control"
-      id="password1"
-      name="password1"
-      placeholder="Password eingeben"
-    />
-  </div>
-  <div class="form-group">
-    <b><label for="password2">Password (Bestätigung)</label></b>
-    <input
-      type="password"
-      class="form-control"
-      id="password2"
-      name="password2"
-      placeholder="Passwort bestätigen"
-    />
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+<div id="signup" style="display: none">
+  <form method="POST">
+    <br />
+    <h3 align="center">Sign Up</h3>
+    <div class="form-group">
+      <b><label for="username">Benutzername</label></b>
+      <input
+        type="username"
+        class="form-control"
+        id="username"
+        name="username"
+        placeholder="Benutzername eingeben"
+      />
+    </div>
+    <div class="form-group">
+      <b><label for="firstName">Vorname</label></b>
+      <input
+        type="text"
+        class="form-control"
+        id="firstName"
+        name="firstName"
+        placeholder="Vorname eingeben"
+      />
+    </div>
+    <div class="form-group">
+      <b><label for="lastName">Nachname</label></b>
+      <input
+        type="text"
+        class="form-control"
+        id="lastName"
+        name="lastName"
+        placeholder="Nachname eingeben"
+      />
+    </div>
+    <div class="form-group">
+      <b><label for="password1">Passwort</label></b>
+      <input
+        type="password"
+        class="form-control"
+        id="password1"
+        name="password1"
+        placeholder="Password eingeben"
+      />
+    </div>
+    <div class="form-group">
+      <b><label for="password2">Password (Bestätigung)</label></b>
+      <input
+        type="password"
+        class="form-control"
+        id="password2"
+        name="password2"
+        placeholder="Passwort bestätigen"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
 </div>
 
-<br/>
+<br />
 {% endif %}
 <h1>Spielerliste</h1>
+
 <div class="table-responsive">
-<table class="table-striped table" >
-<thead>
-  <tr>
-    <th style="width: 40px" scope="col">#</th>
-    <th scope="col">Name</th>
-    <th scope="col">Benutzername</th>
-    <th scope="col" colspan="2"></th>
-  </tr>
-</thead>
-<tbody>
-{% for player in players %}
-    <tr>
-      <th scope="row">{{loop.index}}</th>
-      <td>{{ player.first_name }} {{ player.last_name }}</td>
-      <td>{{ player.username }}</td>
-      <td style="width: 20px;"><a href = "/edit/{{player.id}}" class="btn btn-outline-success btn-sm">Edit</a></td>
-      <td style="width: 20px;">
-        <a href = "/delete/{{player.id}}" class="btn btn-outline-danger btn-sm">Delete</a>
-      </td>
-    </tr>
-{% endfor %}
-</tbody>
-</table>
+  <!-- Search Field -->
+  <input
+    style="width: 40%; margin-bottom: 2px"
+    type="text"
+    id="inputSearch"
+    class="form-control"
+    onkeyup="filterTable('player_table', 'inputSearch')"
+    placeholder="Suche nach Namen..."
+    title="Tippe Namen ein"
+  />
+
+  <table id="player_table" class="table-striped table">
+    <thead>
+      <tr>
+        <th style="width: 40px" scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Benutzername</th>
+        <th scope="col" colspan="2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for player in players %}
+      <tr>
+        <th scope="row">{{loop.index}}</th>
+        <td>{{ player.first_name }} {{ player.last_name }}</td>
+        <td>{{ player.username }}</td>
+        <td style="width: 20px">
+          <a href="/edit/{{player.id}}" class="btn btn-outline-success btn-sm"
+            >Edit</a
+          >
+        </td>
+        <td style="width: 20px">
+          <a href="/delete/{{player.id}}" class="btn btn-outline-danger btn-sm"
+            >Delete</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
+<br />
 {% endblock %}
