@@ -32,7 +32,8 @@ block content %} {% if current_user.role == "ADMIN" %}
         id="username"
         name="username"
         placeholder="Benutzername eingeben"
-      />
+        required
+        />
     </div>
     <div class="form-group">
       <b><label for="firstName">Vorname</label></b>
@@ -42,7 +43,8 @@ block content %} {% if current_user.role == "ADMIN" %}
         id="firstName"
         name="firstName"
         placeholder="Vorname eingeben"
-      />
+        required
+        />
     </div>
     <div class="form-group">
       <b><label for="lastName">Nachname</label></b>
@@ -52,6 +54,7 @@ block content %} {% if current_user.role == "ADMIN" %}
         id="lastName"
         name="lastName"
         placeholder="Nachname eingeben"
+        required
       />
     </div>
     <div class="form-group">
@@ -61,17 +64,19 @@ block content %} {% if current_user.role == "ADMIN" %}
         class="form-control"
         id="password1"
         name="password1"
-        placeholder="Password eingeben"
-      />
+        placeholder="Passwort eingeben"
+        required
+        />
     </div>
     <div class="form-group">
-      <b><label for="password2">Password (Bestätigung)</label></b>
+      <b><label for="password2">Passwort (Bestätigung)</label></b>
       <input
         type="password"
         class="form-control"
         id="password2"
         name="password2"
         placeholder="Passwort bestätigen"
+        required
       />
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
