@@ -177,7 +177,7 @@ def payment():
     if current_user.role == "ADMIN":
         player_amount = Player.query.count()
         # games and payment_information both are ordered desc for output (game one time then corresp. table)
-        games = Game.query.order_by(Game.gameday.desc())
+        games = Game.query.order_by(Game.id.desc())
         game_amount = games.count()
         db_connection = psycopg2.connect(heroku_db_link)
         cursor = db_connection.cursor()
@@ -228,10 +228,37 @@ def payment():
         ) as x\
 		Group BY x.game_id, betrag\
         ORDER BY x.game_id desc")
+        
         # total_payment [(game_id, total), (game_id, total)] acess with totalpayment[x][y]
         total_payment = cursor.fetchall()
+        
+        #payed
+        cursor.execute("\
+        Select x.game_id, CAST(sum(betrag) as INTEGER) as total\
+        FROM\
+        (\
+            Select CASE WHEN Count(g.id) < 5 THEN 5 ELSE COUNT(g.id) END as betrag, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name, g.id as game_id,\
+                pl.id\
+            FROM participates as p join Player as pl on p.player_id = pl.id join Game as g on g.id = p.game_id\
+                join bet as b on b.player_id = pl.id and b.game_id = g.id\
+            WHERE p.bet_is_payed = True\
+            GROUP BY g.id, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name, pl.id\
+                \
+            UNION ALL\
+                \
+            Select CASE WHEN Count(g.id) < 5 THEN 5 ELSE COUNT(g.id) END as Betrag, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name, g.id as game_id,\
+                pl.id\
+            FROM participates as p join Player as pl on p.player_id = pl.id join Game as g on g.id = p.game_id left join bet\
+                on pl.id = bet.player_id and g.id = bet.game_id\
+            WHERE bet.id is NULL AND p.bet_is_payed = True\
+            GROUP BY g.id, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name, pl.id\
+        ) as x\
+		Group BY x.game_id, betrag\
+        ORDER BY x.game_id desc") 
 
-        #games_not_payed - List
+        payed_sum = cursor.fetchall()
+        print(payed_sum)
+        #games_not_payed - List  
         cursor.execute("Select g.id as game_id\
         FROM game as g join participates as p on g.id = p.game_id\
         group by g.id, p.bet_is_payed\
@@ -242,7 +269,7 @@ def payment():
         cursor.close()
         db_connection.close()
         if request.method == 'POST': 
-            # game id | Player id - iterate amoutn of game | player
+            # game id | Player id - iterate amoutn of game | player 
             data_pay_form = request.form.getlist('payment_checkbox')     
     
             if(data_pay_form):
@@ -264,5 +291,5 @@ def payment():
             return redirect(url_for('views.payment'))
         return render_template("pay.html", payment_information=payment_information, 
             games_not_payed = games_not_payed, games=games, player_amount=player_amount,
-            total_payment = total_payment)
+            total_payment = total_payment, payed_sum = payed_sum)
     return redirect(url_for('views.home'))

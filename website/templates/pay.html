@@ -113,11 +113,14 @@
 
     {% endfor %}
     <tr id = "xx">
-      <td style="text-align: right;"><b>Gesamt:</b></td>
+      <td style="text-align: right;"> <!--<b>Gesamt:</b><br/> --><b>Bezahlt:</b></td>
       <td>
-        {{total_payment[loop.index0][1]}} €
+        <!--{{total_payment[loop.index0][1]}}€ <br/>-->
+        {%for pay_sum in payed_sum %}
+         {%if pay_sum[0] == game.id%} {{pay_sum[1]}}€{% endif %}
+        {%endfor%}
       </td>
-      <td colspan="2" >
+      <td colspan="2">
       <button style="float: right; margin-right: 10px" type="submit" class="btn btn-success">
           <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 15px;" width="16" height="16" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0z"/>
