@@ -64,6 +64,21 @@
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 <br/>
+<style type="text/css">
+.recent_games
+{
+  border: none;
+}
+.recent_games tr
+{
+  text-align: left!important;
+}
+</style>
+<h2>Aktuelle Spiele</h2>
+{% for table in recent_games %}
+{{table|safe}}
+{% endfor %}
+
 <h3>Aktive Spiele</h3>
 
 <table class="table table-striped">

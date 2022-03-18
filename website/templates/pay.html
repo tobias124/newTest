@@ -1,8 +1,5 @@
 {% extends 'base-with-footer.html' %} {% block title %}Pay{% endblock %}
 {% block content%}
-<h1>Kassa</h1>
-
-
 
 <style>
   .table td, .table th {
@@ -10,7 +7,7 @@
     vertical-align: top;
     border-top: 1px solid #dee2e6;
     height: 40px;
-}
+  }
   input.largerCheckbox {
     width: 20px;
     height: 20px;
@@ -21,13 +18,13 @@
     background-color: #28a745;
     border-color: #28a745;
   }
-
+  
   .btn-success {
-  color: #fff;
-  background-color: #218838;
-  border-color: #1e7e34;
+    color: #fff;
+    background-color: #218838;
+    border-color: #1e7e34;
   }
-</style>
+  </style>
 
 
 <script>
@@ -41,8 +38,10 @@
     {
       document.getElementById(id).src="./static/img/dropdown-icon.png";
     }
-    }
+  }
   </script>
+
+<h1>Kassa <img width="35px" height="auto" src="./static/img/salary.png" alt="salary"></h1>
 
 <h3>Spiele</h3>
 {%for game in games %}

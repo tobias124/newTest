@@ -9,12 +9,12 @@
     border-top: 1px solid #dee2e6;
   }
 
-  #bet {
+  #bet_button {
       padding: 0.2rem 0.2rem;
   }
 </style>
 
-<h1>Tippen</h1>
+<h1>Tippen <img src="./static/img/betting.png" width="40px" height="auto" alt="bet"> </h1>
 {% for game in active_games %}
 {% set count = namespace(value=1) %} 
 <br/>
@@ -75,7 +75,7 @@
         </td>
         </tr>
         <tr>
-        <td  style="border: none"><button type="submit" id="bet" class="btn btn-primary">Tippen</button></td>
+        <td  style="border: none"><button type="submit" id="bet_button" class="btn btn-primary">Tippen</button></td>
         <td  style="border: none" colspan="2"></td>
         </tr>
       </tbody>

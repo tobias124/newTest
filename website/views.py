@@ -113,10 +113,7 @@ def games():
 
                     db.session.commit()
 
-                    if(dev):
-                        connection = psycopg2.connect(local_db_link)
-                    else:
-                        connection = psycopg2.connect(heroku_db_link)
+                    connection = psycopg2.connect(heroku_db_link)
 
                     # change bet_is_payed boolean of specific game in assoc table
                     cursor = connection.cursor()
@@ -167,7 +164,8 @@ def games():
                 db.session.commit()
 
                 flash("Game deleted successfully!", category='success')
-        return render_template('games.html', active_games=games, winners=winners, games_done=games_done)
+        from scrape import recent_games
+        return render_template('games.html', recent_games = [recent_games.to_html (header=True, index=False, classes='table table-borderless recent_games')], active_games=games, winners=winners, games_done=games_done)
     else:
         return redirect(url_for('views.home'))
 
