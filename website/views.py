@@ -165,7 +165,7 @@ def games():
 
                 flash("Game deleted successfully!", category='success')
         from scrape import recent_games
-        return render_template('games.html', recent_games = [recent_games.to_html (header=True, index=False, classes='table table-borderless recent_games')], active_games=games, winners=winners, games_done=games_done)
+        return render_template('games.html', recent_games = [recent_games.to_html (header=True, index=False, classes='table table-borderless table-responsive recent_games')], active_games=games, winners=winners, games_done=games_done)
     else:
         return redirect(url_for('views.home'))
 
