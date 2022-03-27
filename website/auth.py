@@ -18,13 +18,13 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         player = Player.query.filter_by(username=username).first()
-        remember = True if request.form.get('remember') else False #implement?
+        remember = True #if request.form.get('remember'): True else False implement?
         
         if player:
             if check_password_hash(player.password, password):
                 login_user(player, remember=remember)
             else:
-                flash('Falsches Password, versuche es noch einmal!', category='error')
+                flash('Falsches Passwort, versuche es noch einmal!', category='error')
         else:
             flash('Benutzername ' + username +' existiert nicht!', category='error')
     if current_user.is_authenticated:

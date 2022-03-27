@@ -69,12 +69,13 @@
 {% if number_of_winners %}
   <h5>Gewinner deiner Tipps:</h5>
   {% for game in games_done %}
+  
     {% if loop.index is divisibleby 2 %}
       <div style="background-color:#20c997d6; padding: 8px 8px 0px 8px; margin-bottom:0px; border-radius: .25rem!important;">
     {%else%}
       <div style="background-color:#ff7400b8; padding: 8px 8px 0px 8px; margin-bottom:0px; border-radius: .25rem!important;">
     {% endif %}
-    <b>Gewinner</b><br/>{{game.home_team}} : {{game.away_team}} {{game.home_goals}} : {{game.away_goals}}<br/>
+    <b>Gewinner</b><br/>{{game[1]}} : {{game[2]}} {{game[3]}} : {{game[4]}}<br/>
 
     <table class="table" id="table_home">
       <tr>  
@@ -82,7 +83,7 @@
           <th style="border: none;">Tipp</th>
       </tr>
     {% for winner in winners %}
-      {% if winner[1].id == game.id %}
+      {% if winner[1].id == game[0] %}
           <tr>
             <td style="border-color: black; max-width: 95px;">{{ winner[0].participant }}</td>
             <td style="border-color: black;">{{winner[0].home_goals}} : {{winner[0].away_goals}}</td>

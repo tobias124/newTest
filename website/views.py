@@ -20,9 +20,21 @@ def check_Bet_Form_Requirements(home_goals, away_goals):
 @login_required
 def home():
     games_active = Game.query.filter_by(enabled=True)
-    games_done = Game.query.filter_by(enabled=False)
+    
+    db_connection = psycopg2.connect(heroku_db_link)
+    cursor = db_connection.cursor()
+    query = "SELECT game_id, game.home_team, game.away_team, game.home_goals, game.away_goals\
+             FROM bet JOIN game ON game.id = bet.game_id \
+             WHERE bet.player_id = %s AND bet.away_goals = game.away_goals AND bet.home_goals = game.home_goals\
+             Group by game_id, game.home_team, game.away_team, game.home_goals, game.away_goals\
+             Order by game_id desc" % (str(current_user.id),)
+    cursor.execute(query)
+    games_done = cursor.fetchall()  
+    cursor.close()  
+    db_connection.close() 
     winners = db.session.query(Bet, Game).filter(Bet.player_id == current_user.id)\
         .join(Game, (Game.id == Bet.game_id)).filter(Bet.away_goals == Game.away_goals, Bet.home_goals == Game.home_goals)
+    
     number_of_winners = winners.count()
     number_of_active_games = Game.query.filter_by(enabled=True).count()
 
@@ -95,7 +107,7 @@ def games():
             .join(Game, (Game.id == Bet.game_id))\
             .join(Player, (Bet.player_id == Player.id))\
             .filter(Bet.away_goals == Game.away_goals, Bet.home_goals == Game.home_goals)
-        games_done = Game.query.filter_by(enabled=False)
+        games_done = Game.query.filter_by(enabled=False).order_by(Game.gameday.desc())
         if request.method == 'POST':
             # Add new game:
             if request.form.get('add_game_const') == '1':
@@ -231,7 +243,7 @@ def payment():
         total_payment = cursor.fetchall()
         
         #payed
-        cursor.execute("  Select game_id, Sum(betrag)\
+        cursor.execute("Select game_id, Sum(betrag)\
         FROM\
         (\
             Select CASE WHEN Count(g.id) < 5 THEN 5 ELSE COUNT(g.id) END as betrag, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name, g.id as game_id,\
@@ -254,7 +266,7 @@ def payment():
 ")
 
         payed_sum = cursor.fetchall()
-        print(payed_sum) 
+
         #games_not_payed - List  
         cursor.execute("Select g.id as game_id\
         FROM game as g join participates as p on g.id = p.game_id\
@@ -277,7 +289,6 @@ def payment():
                 # update all
                 for data in data_pay_form:  
                     data = data.split(",")   
-                    # print(data)
                     query_data = (data[0], data[1])
                     cursor.execute(query, query_data)
                 db_connection.commit()
@@ -290,3 +301,19 @@ def payment():
             games_not_payed = games_not_payed, games=games, player_amount=player_amount,
             total_payment = total_payment, payed_sum = payed_sum)
     return redirect(url_for('views.home'))
+
+@views.route('/bet-details')
+@login_required
+def bet_details():
+    games = Game.query
+    statistics = db.session.query(Bet, Player).filter(Bet.player_id == Player.id).all()
+    db_connection = psycopg2.connect(heroku_db_link)
+    cursor = db_connection.cursor()
+    cursor.execute("Select bet.game_id, player.id, player.first_name, player.last_name, bet.participant, home_goals, away_goals\
+                    FROM bet join player on bet.player_id = player.id\
+                    ORDER BY game_id, player.id asc")
+    test = cursor.fetchall()
+    cursor.close()
+    db_connection.close()
+
+    return render_template("bet-details.html", games = games, statistics = statistics)
