@@ -44,7 +44,7 @@ def home():
                            user_last_name=current_user.last_name, winners=winners, number_of_active_games=number_of_active_games,
                            games_done=games_done, number_of_winners=number_of_winners, games_active=games_active, 
                            glw_table = [glw_table.to_html (header=True, index=False, classes='table-sm table-striped')],
-                           recent_games = [recent_games.to_html (header=True, index=False, classes='table table-striped table-borderless table-responsive recent_games')])
+                           recent_games = [recent_games.to_html (header=True, index=False, classes='table table-striped table-borderless recent_games')])
 
 
 @views.route('/bet-delete/<int:id>', methods=['POST', 'GET'])
