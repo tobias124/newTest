@@ -39,11 +39,12 @@ def home():
     number_of_active_games = Game.query.filter_by(enabled=True).count()
 
     from scrape import glw_table
-
+    from scrape import recent_games
     return render_template("index.html", user_first_name=current_user.first_name,
                            user_last_name=current_user.last_name, winners=winners, number_of_active_games=number_of_active_games,
                            games_done=games_done, number_of_winners=number_of_winners, games_active=games_active, 
-                           glw_table = [glw_table.to_html (header=True, index=False, classes='table-sm table-striped')])
+                           glw_table = [glw_table.to_html (header=True, index=False, classes='table-sm table-striped')],
+                           recent_games = [recent_games.to_html (header=True, index=False, classes='table table-striped table-borderless table-responsive recent_games')])
 
 
 @views.route('/bet-delete/<int:id>', methods=['POST', 'GET'])
@@ -305,15 +306,16 @@ def payment():
 @views.route('/bet-details')
 @login_required
 def bet_details():
-    games = Game.query
-    statistics = db.session.query(Bet, Player).filter(Bet.player_id == Player.id).all()
-    db_connection = psycopg2.connect(heroku_db_link)
-    cursor = db_connection.cursor()
-    cursor.execute("Select bet.game_id, player.id, player.first_name, player.last_name, bet.participant, home_goals, away_goals\
-                    FROM bet join player on bet.player_id = player.id\
-                    ORDER BY game_id, player.id asc")
-    test = cursor.fetchall()
-    cursor.close()
-    db_connection.close()
-
-    return render_template("bet-details.html", games = games, statistics = statistics)
+    if current_user.role == "ADMIN":
+        games = Game.query
+        statistics = db.session.query(Bet, Player).filter(Bet.player_id == Player.id).all()
+        db_connection = psycopg2.connect(heroku_db_link)
+        # cursor = db_connection.cursor()
+        # cursor.execute("Select bet.game_id, player.id, player.first_name, player.last_name, bet.participant, home_goals, away_goals\
+        #                 FROM bet join player on bet.player_id = player.id\
+        #                 ORDER BY game_id, player.id asc")
+        # test = cursor.fetchall()
+        # cursor.close()
+        # db_connection.close()
+        return render_template("bet-details.html", games = games, statistics = statistics)
+    return redirect(url_for('views.home'))

@@ -18,6 +18,20 @@
   padding: 0.25rem;
 }
 
+.recent_games
+{
+  border: none;
+}
+.recent_games tr
+{
+  border-bottom: 1px solid rgb(194, 188, 188);
+  text-align: left!important; 
+}
+
+.recent_games th
+{
+  text-align: left!important; 
+}
 </style>
 
 <h1>
@@ -51,19 +65,15 @@
 {% endfor %}
 </div>
 <br/>
-{%if number_of_active_games %}
 
-<table id="current_games_table" class="btn table-responsive" style="text-align:left; background-color: #adb5bd">
+
 <h5 align="left">Aktuelle Spiele:</h5>
 
-    {% for game_active in games_active %}
-    <tr>
-       <td style="border: none!important;"> {{game_active.gameday}}. {{game_active.home_team}} vs. {{game_active.away_team}}</td>
-      </tr>
-    {%endfor%}
-  </table>
+{% for table in recent_games %}
+{{table|safe}}
+{% endfor %}
 
-{% endif %}
+
 <br/>
 <br/>
 {% if number_of_winners %}
