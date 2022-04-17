@@ -1,78 +1,63 @@
 {% extends 'base-with-footer.html' %} {% block title %}Games{% endblock %}
 {% block content%}
 <style>
-  .table td, .table th {
+  .wtable td,
+  .wtable th {
     padding: 0.35rem;
     vertical-align: top;
     border-top: 1px solid #dee2e6;
   }
+
+  .recent_games {
+    border: none;
+  }
+
+  .recent_games tr {
+    border-bottom: 1px solid rgb(194, 188, 188);
+    text-align: left !important;
+  }
+
+  .recent_games th {
+    text-align: left !important;
+  }
 </style>
 
 <h1>Spiele</h1>
-<br/>
+<br />
 <button class="btn btn-primary" onclick="showHideElement('add_game')" type="button">Spiel hinzufügen</button>
 <h3></h3>
-<hr/>
+<hr />
 <form id="add_game" method="POST" style="display: none;">
   <div class="row">
     <div class="col">
       <label for="gameday"><b>Spieltag</b></label>
-      <input
-        style="width: 80px"
-        type="number"
-        class="form-control"
-        id="gameday"
-        name="gameday"
-        required
-      />
+      <input style="width: 100px" type="number" class="form-control" id="gameday" name="gameday" placeholder="Spieltag"
+        required />
     </div>
   </div>
   <div class="row">
     <div class="col">
       <label for="home_team"><b>Heim</b></label>
-      <input
-        type="text"
-        class="form-control"
-        id="home_team"
-        name="home_team"
-        placeholder="Heim Team"
-        required
-      />
+      <input type="text" class="form-control" id="home_team" name="home_team" placeholder="Heim Team" required />
     </div>
     <div class="col">
       <label for="away_team"><b>Auswärts</b></label>
-      <input
-        type="text"
-        class="form-control"
-        id="away_team"
-        name="away_team"
-        placeholder="Auswärts Team"
-        required
-      />
+      <input type="text" class="form-control" id="away_team" name="away_team" placeholder="Auswärts Team" required />
     </div>
-    <input
-      type="text"
-      class="form-control"
-      id="add_game_const"
-      name="add_game_const"
-      value="1"
-      hidden
-      required
-    />
+    <input type="text" class="form-control" id="add_game_const" name="add_game_const" value="1" hidden required />
   </div>
   <br />
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-<br/>
+<br />
 <style type="text/css">
-.recent_games
-{
-  border: none;
-}
-.recent_games tr
-{
-  text-align: left!important;
-}
+  .recent_games {
+    border: none;
+  }
+
+  .recent_games tr {
+    text-align: left !important;
+  }
 </style>
 <h2>Aktuelle Spiele</h2>
 {% for table in recent_games %}
@@ -82,63 +67,67 @@
 <h3>Aktive Spiele</h3>
 
 <table class="table table-striped">
-<thead>
+  <thead>
     <tr>
       <th scope="col">Spiel</th>
       <th colspan="2" scrope="col">Ergebnis</th>
       <th scrope="col"></th>
     </tr>
   </thead>
-{% for game in active_games %} 
+  {% for game in active_games %}
 
-    <tbody>
-      <tr>
-        <td>
-          <b>{{game.gameday}}. Spieltag</b>
-          {%if game.enabled%}
-          <a href = "/lockbet/{{game.id}}">
+  <tbody>
+    <tr>
+      <td>
+        <b>{{game.gameday}}. Spieltag</b>
+        {%if game.enabled%}
+        <a href="/lockbet/{{game.id}}">
           {%endif%}
-          
-          {%if game.bet_lock %}
-            <img src="./static/img/lock.png" style="margin-left: 4px;" width="20px" height="auto" alt="lock">
-          {% else %}
-            <img src="./static/img/lock-open.png" style="margin-left: 4px;" width="20px" height="auto" alt="lock">
-          {% endif %}
-          </a>
-          <br/>
-          {{game.home_team}} : {{game.away_team}}
-        </td>
 
-        {% if game.home_goals == None or game.away_goals == None %}
-        <form id="results" method="POST">
-            <input type="text" class="form-control" id="edit_game_const" name="edit_game_const" value="1" hidden/>
-            <td style="width: 45px; vertical-align: bottom;"><input class="form-control" id="home_goals_result" name="home_goals_result"  style="min-width: 45px;" required/></td>
-            <td style="width: 45px; vertical-align: bottom;"><input class="form-control" id="away_goals_result" name="away_goals_result"  style="min-width: 45px;" required/></td>
-         <input  class="form-control" id="current_game" name="current_game" value="{{game.id}}" hidden>      
-        <td style="width: 20px;"><br/><button  style="
+          {%if game.bet_lock %}
+          <img src="./static/img/lock.png" style="margin-left: 4px;" width="20px" height="auto" alt="lock">
+          {% else %}
+          <img src="./static/img/lock-open.png" style="margin-left: 4px;" width="20px" height="auto" alt="lock">
+          {% endif %}
+        </a>
+        <br />
+        {{game.home_team}} : {{game.away_team}}
+      </td>
+
+      {% if game.home_goals == None or game.away_goals == None %}
+      <form id="results" method="POST">
+        <input type="text" class="form-control" id="edit_game_const" name="edit_game_const" value="1" hidden />
+        <td style="width: 45px; vertical-align: bottom;"><input class="form-control" id="home_goals_result"
+            name="home_goals_result" style="min-width: 45px;" required /></td>
+        <td style="width: 45px; vertical-align: bottom;"><input class="form-control" id="away_goals_result"
+            name="away_goals_result" style="min-width: 45px;" required /></td>
+        <input class="form-control" id="current_game" name="current_game" value="{{game.id}}" hidden>
+        <td style="width: 20px;"><br /><button style="
             border: none;
             color: #007bff;
             background-color: transparent;
             text-align: center;
             text-decoration: none;
             display: inline-block;
-            " type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            " type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+              class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+              <path
+                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
             </svg></button></td>
-        </form>
-      </tr>
-    </tbody>
+      </form>
+    </tr>
+  </tbody>
 
 
-{% else %}
-<td style="width: 60px;"><br/>{{game.home_goals}}</td>
-<td style="width: 60px;"><br/>{{game.away_goals}}</td>
+  {% else %}
+  <td style="width: 60px;"><br />{{game.home_goals}}</td>
+  <td style="width: 60px;"><br />{{game.away_goals}}</td>
 
-<td style="width: 20px;"><br/>
+  <td style="width: 20px;"><br />
     <form method="POST" id="deletion">
-        <input type="text" name="delete" id="delete" value="1" hidden>
-        <input class="form-control" id="current_game" name="current_game" value="{{game.id}}" hidden>
-        <button  style="
+      <input type="text" name="delete" id="delete" value="1" hidden>
+      <input class="form-control" id="current_game" name="current_game" value="{{game.id}}" hidden>
+      <button style="
         border: none;
         color: rgb(144, 38, 38);
         background-color: transparent;
@@ -146,39 +135,46 @@
         text-decoration: none;
         display: inline-block;
         font-weight: bolder;
-        font-size: 18px;" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-          <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-        </svg></td>
-    </form>
-{%endif%}
+        font-size: 18px;" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="20"
+          fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+          <path
+            d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+        </svg>
+  </td>
+  </form>
+  {%endif%}
 
-{% endfor %} 
+  {% endfor %}
 </table>
-<br/>
-<br/>
+<br />
+<br />
 
 {% for game in games_done %}
 <div style="background-color:azure; border: 1px solid rgb(200, 200, 200); padding: 5px">
-<b>Gewinner </b><br/>{{game.home_team}} : {{game.away_team}} {{game.home_goals}} : {{game.away_goals}}<br/>
-<br/>
-<table class="table">
-  <tr>  
-    <th style="border-bottom: 1px solid grey">Spieler</th>
-      <th style="border-bottom: 1px solid grey">Gewinner</th>
-      <th style="border-bottom: 1px solid grey">Tipp</th>
-    </tr>
-  {% for winner in winners %}
-{% if winner[1].id == game.id %}
+  <b>Gewinner </b><br />{{game.home_team}} : {{game.away_team}} {{game.home_goals}} : {{game.away_goals}}<br />
+  <br />
+  <table class="table wtable">
+    <thead>
     <tr>
-  <td>{{winner[2].first_name}} {{winner[2].last_name}}</td>
-  <td><b>{{ winner[0].participant }}</b></td>
-    <td>{{winner[0].home_goals}} : {{winner[0].away_goals}}</td>
-   </tr>
-  {%endif%}
-  {% endfor %}
-</table>
+      <th style="border-bottom: 1px solid grey; border-top: 1px solid grey">Spieler</th>
+      <th style="border-bottom: 1px solid grey; border-top: 1px solid grey">Gewinner</th>
+      <th style="border-bottom: 1px solid grey; border-top: 1px solid grey">Tipp</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for winner in winners %}
+    {% if winner[1].id == game.id %}
+    <tr>
+      <td>{{winner[2].first_name}} {{winner[2].last_name}}</td>
+      <td><b>{{ winner[0].participant }}</b></td>
+      <td>{{winner[0].home_goals}} : {{winner[0].away_goals}}</td>
+    </tr>
+    {%endif%}
+    {% endfor %}
+  </tbody>
+  </table>
 </div>
-<br/>
-<br/>
+<br />
+<br />
 {%endfor%}
 {% endblock %}

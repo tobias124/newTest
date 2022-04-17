@@ -2,107 +2,111 @@
 {% block content %}
 
 <style>
+  .twinner td, .twinner th {
+    padding: 0.35rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
   .table-sm tr {
-    text-align: left!important;
+    text-align: left !important;
   }
 
-#glw_table_btn1 {
+  #glw_table_btn1 {
     margin-left: 13px;
-}
+  }
 
   #glw_table_btn2 {
     margin-left: 43px;
-}
+  }
 
-#current_games_table td, #current_games_table th {
-  padding: 0.25rem;
-}
+  #current_games_table td,
+  #current_games_table th {
+    padding: 0.25rem;
+  }
 
-.recent_games
-{
-  border: none;
-}
-.recent_games tr
-{
-  border-bottom: 1px solid rgb(194, 188, 188);
-  text-align: left!important; 
-}
+  .recent_games {
+    border: none;
+  }
 
-.recent_games th
-{
-  text-align: left!important; 
-}
+  .recent_games tr {
+    border-bottom: 1px solid rgb(194, 188, 188);
+    text-align: left !important;
+  }
+
+  .recent_games th {
+    text-align: left !important;
+  }
 </style>
 
 <h1>
-    Dashboard
+  Dashboard
 </h1>
-<br/>
+<br />
 
 <h4>
   <img src="./static/img/logo.png" style="padding-bottom: 5px; margin-right: 4px" width="30px" height="auto">
-    Hallo {{ user_first_name }}!
-    <img width="30px" height="auto" style="padding-bottom: 5px;" 
-    src="./static/img/fussballspieler.png">
+  Hallo {{ user_first_name }}!
+  <img width="30px" height="auto" style="padding-bottom: 5px;" src="./static/img/fussballspieler.png">
 </h4>
-<br/>
+<br />
 
 <div style="width: 300px; margin-left: auto; margin-right: auto; display: block;">
-<button id="glw_table_btn1" class="btn btn-dark btn-lg" onclick="showHideElement('glw_table')">
-  Tabelle<br/> <img style="width: 75px; height: 80px;" src="./static/img/table.png" alt="Tabelle">
-  <br/>anzeigen
-</button>
-<a style="color: white; text-decoration: none;" href="https://bet-works.herokuapp.com/bet">
-<button id="glw_table_btn2" class="btn btn-dark btn-lg" >
-  Jetzt<br/><img style="width: 75px; height: 80px" src="./static/img/bet.png">
-  <br/>tippen</a>
-</button>
+  <button id="glw_table_btn1" class="btn btn-dark btn-lg" onclick="showHideElement('glw_table')">
+    Tabelle<br /> <img style="width: 75px; height: 80px;" src="./static/img/table.png" alt="Tabelle">
+    <br />anzeigen
+  </button>
+  <a style="color: white; text-decoration: none;" href="https://bet-works.herokuapp.com/bet">
+    <button id="glw_table_btn2" class="btn btn-dark btn-lg">
+      Jetzt<br /><img style="width: 75px; height: 80px" src="./static/img/bet.png">
+      <br />tippen</a>
+  </button>
 </div>
-<br/>
+<br />
 <div id="glw_table" style="max-width: 330px; display: none; margin-left: auto; margin-right: auto;">
-{% for table in glw_table %}
-{{table|safe}}
-{% endfor %}
+  {% for table in glw_table %}
+  {{table|safe}}
+  {% endfor %}
 </div>
-<br/>
+<br />
 
 
 <h5 align="left">Aktuelle Spiele:</h5>
-<div class="table-responsive">
-{% for table in recent_games %}
-{{table|safe}}
-{% endfor %}
-</div>
 
-<br/>
-<br/>
+  {% for table in recent_games %}
+  {{table|safe}}
+  {% endfor %}
+
+
 {% if number_of_winners %}
-  <h5>Gewinner deiner Tipps:</h5>
-  {% for game in games_done %}
-  
-    {% if loop.index is divisibleby 2 %}
-      <div style="background-color:#20c997d6; padding: 8px 8px 0px 8px; margin-bottom:0px; border-radius: .25rem!important;">
-    {%else%}
-      <div style="background-color:#ff7400b8; padding: 8px 8px 0px 8px; margin-bottom:0px; border-radius: .25rem!important;">
-    {% endif %}
-    <b>Gewinner</b><br/>{{game[1]}} : {{game[2]}} {{game[3]}} : {{game[4]}}<br/>
+<br />
+<h5>Gewinner deiner Tipps:</h5>
+{% for game in games_done %}
 
-    <table class="table" id="table_home">
-      <tr>  
-          <th style="border: none;">Gewinner</th>
-          <th style="border: none;">Tipp</th>
+{% if loop.index is divisibleby 2 %}
+<div style="background-color:#20c997d6; padding: 8px 8px 0px 8px; margin-bottom:0px; border-radius: .25rem!important;">
+  {%else%}
+  <div
+    style="background-color:#ff7400b8; padding: 8px 8px 0px 8px; margin-bottom:0px; border-radius: .25rem!important;">
+    {% endif %}
+    <b>Gewinner</b><br />{{game[1]}} : {{game[2]}} {{game[3]}} : {{game[4]}}<br />
+
+    <table class="table twinner">
+      <tr>
+        <th style="border-bottom: 1px solid black; border-top: none !important;">Gewinner</th>
+        <th style="border-bottom: 1px solid black; border-top: none !important;">Tipp</th>
       </tr>
-    {% for winner in winners %}
+      {% for winner in winners %}
       {% if winner[1].id == game[0] %}
-          <tr>
-            <td style="border-color: black; max-width: 95px;">{{ winner[0].participant }}</td>
-            <td style="border-color: black;">{{winner[0].home_goals}} : {{winner[0].away_goals}}</td>
-          </tr>
+      <tr>
+        <td style="border: none; max-width: 95px;">{{ winner[0].participant }}</td>
+        <td style="border: none;">{{winner[0].home_goals}} : {{winner[0].away_goals}}</td>
+      </tr>
       {%endif%}
-    {% endfor %}
+      {% endfor %}
     </table>
-    </div>
+  </div>
 
   {%endfor%}
-{% endif %}
-{% endblock %}
+  {% endif %}
+  {% endblock %}

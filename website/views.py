@@ -77,6 +77,16 @@ def bet():
                           player_id=player_id, game_id=game_id)
             db.session.add(new_bet)
             db.session.commit()
+        # set bet is payed to false if new there is a new bet
+        # change bet_is_payed boolean of specific game in assoc table
+            connection = psycopg2.connect(heroku_db_link)
+            cursor = connection.cursor()
+            query = "UPDATE participates SET bet_is_payed = %s WHERE player_id = %s and game_id = %s"
+            query_data = (False, player_id, game_id)
+            cursor.execute(query, query_data)
+            connection.commit()
+            cursor.close()
+            connection.close()
         else:
             flash("Negative Anzahl Tore nicht möglich", category='error')
     return render_template("bet.html", name=current_user.first_name, bets=bets, active_games=games)
@@ -178,7 +188,7 @@ def games():
 
                 flash("Game deleted successfully!", category='success')
         from scrape import recent_games
-        return render_template('games.html', recent_games = [recent_games.to_html (header=True, index=False, classes='table table-borderless table-responsive recent_games')], active_games=games, winners=winners, games_done=games_done)
+        return render_template('games.html', recent_games = [recent_games.to_html (header=True, index=False, classes='table table-striped table-borderless recent_games')], active_games=games, winners=winners, games_done=games_done)
     else:
         return redirect(url_for('views.home'))
 
