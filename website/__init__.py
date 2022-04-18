@@ -13,7 +13,7 @@ use_heroku_db_locally = False
 
 local_db_link = 'postgresql://postgres:SuperSecret@localhost/betgame'
 
-######## DB HEROKU LOCALLY OR NOT ##########
+######### DB HEROKU LOCALLY OR NOT ###########
 
 if dev and use_heroku_db_locally:
     # Heroku Local
