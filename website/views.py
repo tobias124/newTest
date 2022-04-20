@@ -99,8 +99,10 @@ def lockbet(id):
         game_to_change_lock = Game.query.get_or_404(id)
         if not game_to_change_lock.bet_lock:
             game_to_change_lock.bet_lock = True
+            flash("Für " + game_to_change_lock.home_team + " vs. " + game_to_change_lock.away_team + " können keine Tipps mehr abgegeben werden!", category='success')
         else:
             game_to_change_lock.bet_lock = False
+            flash("Tippen für das Spiel: " + game_to_change_lock.home_team + " vs. " + game_to_change_lock.away_team + " erfolgreich freigegeben.", category='success')
         try:
             db.session.commit()
             return redirect(url_for('views.games'))
