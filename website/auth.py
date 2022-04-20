@@ -64,11 +64,15 @@ def edit(id):
                     flash('Passwort muss länger sein als 3 Zeichen.', category='error')
                     return render_template('editplayer.html', player_to_edit = player_to_edit)
                 
-            if new_username != player_to_edit.username or (len(password1) != 0 and len(password2) != 0):
+            if new_username != player_to_edit.username:
                 player_to_edit.username = new_username
-                player_to_edit.password=generate_password_hash(password1, method='sha256')
+                flash('Benutzernamen erfolgreich geändert!', category='success')
                 db.session.commit()
-                flash('Daten erfolgreich geändert!', category='success')
+            if (len(password1) != 0 and len(password2) != 0):
+                player_to_edit.password=generate_password_hash(password1, method='sha256')
+                flash('Passwort erfolgreich geändert!', category='success')
+                db.session.commit()
+                
                 
         return render_template('editplayer.html', player_to_edit = player_to_edit)
         

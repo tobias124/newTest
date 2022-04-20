@@ -51,18 +51,38 @@
 </form>
 <br />
 <style type="text/css">
-  .recent_games {
-    border: none;
+  .games_table {
+    width: 100%;
   }
 
-  .recent_games tr {
-    text-align: left !important;
+  .games_table td{
+    text-align: center;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    vertical-align: middle;
   }
+
+  .games_table th{
+    border-bottom: 1px solid rgb(194, 188, 188);
+    padding: 0.5rem;
+  }
+
 </style>
 <h2>Aktuelle Spiele</h2>
-{% for table in recent_games %}
-{{table|safe}}
-{% endfor %}
+<div class=" table-responsive-sm">
+  <table class="games_table table-striped">
+    {% for game in table_games%}
+    <tr>
+      <th colspan="3" class="round">{{game[0]}}</th>
+    </tr>
+    <tr>
+      <td>{{game[1]}}</td>
+      <td>{{game[2]}}</td>
+      <td>{{game[3]}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  </div>
 
 <h3>Aktive Spiele</h3>
 

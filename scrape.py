@@ -45,7 +45,9 @@ for team in league_plan.find_all('tr'):
     for row in gl_score:
         score.append(row.text.strip().replace("\n                        \n                    \n\n                        ", " "))
 
-recent_games = pd.DataFrame({'Runde':rounds, 'Heim':teams_right, '':score, 'Ausw.':teams_left})
+table_games = list(zip(rounds, teams_right, score, teams_left))
+
+#recent_games = pd.DataFrame({'H':teams_right, '':score, 'A':teams_left})
 #print(recent_games)
 # print(rounds)
 # print(dates)

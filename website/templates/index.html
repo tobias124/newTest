@@ -2,11 +2,12 @@
 {% block content %}
 
 <style>
-  .twinner td, .twinner th {
+  .twinner td,
+  .twinner th {
     padding: 0.35rem;
     vertical-align: top;
     border-top: 1px solid #dee2e6;
-}
+  }
 
   .table-sm tr {
     text-align: left !important;
@@ -20,23 +21,22 @@
     margin-left: 43px;
   }
 
-  #current_games_table td,
-  #current_games_table th {
-    padding: 0.25rem;
+  .games_table {
+    width: 100%;
   }
 
-  .recent_games {
-    border: none;
+  .games_table td{
+    text-align: center;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    vertical-align: middle;
   }
 
-  .recent_games tr {
+  .games_table th{
     border-bottom: 1px solid rgb(194, 188, 188);
-    text-align: left !important;
+    padding: 0.5rem;
   }
 
-  .recent_games th {
-    text-align: left !important;
-  }
 </style>
 
 <h1>
@@ -73,10 +73,20 @@
 
 <h5 align="left">Aktuelle Spiele:</h5>
 
-  {% for table in recent_games %}
-  {{table|safe}}
+<div class=" table-responsive-sm">
+<table class="games_table table-striped">
+  {% for game in table_games%}
+  <tr>
+    <th colspan="3" class="round">{{game[0]}}</th>
+  </tr>
+  <tr>
+    <td>{{game[1]}}</td>
+    <td>{{game[2]}}</td>
+    <td>{{game[3]}}</td>
+  </tr>
   {% endfor %}
-
+</table>
+</div>
 
 {% if number_of_winners %}
 <br />

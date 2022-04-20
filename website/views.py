@@ -39,12 +39,13 @@ def home():
     number_of_active_games = Game.query.filter_by(enabled=True).count()
 
     from scrape import glw_table
-    from scrape import recent_games
+    from scrape import table_games
+ 
     return render_template("index.html", user_first_name=current_user.first_name,
                            user_last_name=current_user.last_name, winners=winners, number_of_active_games=number_of_active_games,
                            games_done=games_done, number_of_winners=number_of_winners, games_active=games_active, 
                            glw_table = [glw_table.to_html (header=True, index=False, classes='table-sm table-striped')],
-                           recent_games = [recent_games.to_html (header=True, index=False, classes='table table-striped table-borderless recent_games')])
+                           table_games = table_games)
 
 
 @views.route('/bet-delete/<int:id>', methods=['POST', 'GET'])
@@ -187,8 +188,8 @@ def games():
                 db.session.commit()
 
                 flash("Game deleted successfully!", category='success')
-        from scrape import recent_games
-        return render_template('games.html', recent_games = [recent_games.to_html (header=True, index=False, classes='table table-striped table-borderless recent_games')], active_games=games, winners=winners, games_done=games_done)
+        from scrape import table_games
+        return render_template('games.html', table_games = table_games, active_games=games, winners=winners, games_done=games_done)
     else:
         return redirect(url_for('views.home'))
 
