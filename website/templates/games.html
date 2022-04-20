@@ -8,17 +8,29 @@
     border-top: 1px solid #dee2e6;
   }
 
-  .recent_games {
-    border: none;
+  .games_table {
+    width: 100%;
   }
 
-  .recent_games tr {
+  .games_table td {
+    text-align: center;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    vertical-align: middle;
+  }
+
+  .games_table th {
     border-bottom: 1px solid rgb(194, 188, 188);
-    text-align: left !important;
+    padding: 0.5rem;
   }
 
-  .recent_games th {
-    text-align: left !important;
+  .table td, .table th {
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+    padding-top: 0.75rem!important;
+    padding-bottom: 0.75rem!important;
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
   }
 </style>
 
@@ -50,24 +62,6 @@
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 <br />
-<style type="text/css">
-  .games_table {
-    width: 100%;
-  }
-
-  .games_table td{
-    text-align: center;
-    padding-top: 0.7rem;
-    padding-bottom: 0.7rem;
-    vertical-align: middle;
-  }
-
-  .games_table th{
-    border-bottom: 1px solid rgb(194, 188, 188);
-    padding: 0.5rem;
-  }
-
-</style>
 <h2>Aktuelle Spiele</h2>
 <div class=" table-responsive-sm">
   <table class="games_table table-striped">
@@ -82,7 +76,7 @@
     </tr>
     {% endfor %}
   </table>
-  </div>
+</div>
 
 <h3>Aktive Spiele</h3>
 
@@ -105,9 +99,9 @@
           {%endif%}
 
           {%if game.bet_lock %}
-          <img src="./static/img/lock.png" style="margin-left: 4px;" width="20px" height="auto" alt="lock">
+          <img src="./static/img/lock.png" width="22px" height="auto" alt="lock">
           {% else %}
-          <img src="./static/img/lock-open.png" style="margin-left: 4px;" width="20px" height="auto" alt="lock">
+          <img src="./static/img/lock-open.png" width="22px" height="auto" alt="lock">
           {% endif %}
         </a>
         <br />
@@ -122,7 +116,7 @@
         <td style="width: 45px; vertical-align: bottom;"><input class="form-control" id="away_goals_result"
             name="away_goals_result" style="min-width: 45px;" required /></td>
         <input class="form-control" id="current_game" name="current_game" value="{{game.id}}" hidden>
-        <td style="width: 20px;"><br /><button style="
+        <td style="width: 20px; vertical-align: middle;"><button style="
             border: none;
             color: #007bff;
             background-color: transparent;
@@ -143,7 +137,7 @@
   <td style="width: 60px;"><br />{{game.home_goals}}</td>
   <td style="width: 60px;"><br />{{game.away_goals}}</td>
 
-  <td style="width: 20px;"><br />
+  <td style="width: 20px; vertical-align: middle;">
     <form method="POST" id="deletion">
       <input type="text" name="delete" id="delete" value="1" hidden>
       <input class="form-control" id="current_game" name="current_game" value="{{game.id}}" hidden>
@@ -155,7 +149,7 @@
         text-decoration: none;
         display: inline-block;
         font-weight: bolder;
-        font-size: 18px;" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="20"
+        font-size: 18px;" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
           fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
           <path
             d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
@@ -175,23 +169,23 @@
   <br />
   <table class="table wtable">
     <thead>
-    <tr>
-      <th style="border-bottom: 1px solid grey; border-top: 1px solid grey">Spieler</th>
-      <th style="border-bottom: 1px solid grey; border-top: 1px solid grey">Gewinner</th>
-      <th style="border-bottom: 1px solid grey; border-top: 1px solid grey">Tipp</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for winner in winners %}
-    {% if winner[1].id == game.id %}
-    <tr>
-      <td>{{winner[2].first_name}} {{winner[2].last_name}}</td>
-      <td><b>{{ winner[0].participant }}</b></td>
-      <td>{{winner[0].home_goals}} : {{winner[0].away_goals}}</td>
-    </tr>
-    {%endif%}
-    {% endfor %}
-  </tbody>
+      <tr>
+        <th style="border-bottom: 1px solid grey; border-top: 1px solid grey">Spieler</th>
+        <th style="border-bottom: 1px solid grey; border-top: 1px solid grey">Gewinner</th>
+        <th style="border-bottom: 1px solid grey; border-top: 1px solid grey">Tipp</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for winner in winners %}
+      {% if winner[1].id == game.id %}
+      <tr>
+        <td>{{winner[2].first_name}} {{winner[2].last_name}}</td>
+        <td><b>{{ winner[0].participant }}</b></td>
+        <td>{{winner[0].home_goals}} : {{winner[0].away_goals}}</td>
+      </tr>
+      {%endif%}
+      {% endfor %}
+    </tbody>
   </table>
 </div>
 <br />
