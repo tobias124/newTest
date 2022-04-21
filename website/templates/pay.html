@@ -1,45 +1,44 @@
-{% extends 'base-with-footer.html' %} {% block title %}Pay{% endblock %}
-{% block content%}
+{% extends 'base-with-footer.html' %} {% block title %}Pay{% endblock %} {% block content%}
 
 <style>
-  .table td, .table th {
-    padding: 0.28rem;
-    vertical-align: top;
-    border-top: 1px solid #dee2e6;
-    height: 40px;
-  }
-  input.largerCheckbox {
-    width: 20px;
-    height: 20px;
-    vertical-align: middle;
-  }
-  .btn-success:hover {
-    color: #fff;
-    background-color: #28a745;
-    border-color: #28a745;
-  }
-  
-  .btn-success {
-    color: #fff;
-    background-color: #218838;
-    border-color: #1e7e34;
-  }
-  </style>
+    .table td,
+    .table th {
+        padding: 0.28rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+        height: 40px;
+    }
+    
+    input.largerCheckbox {
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+    }
+    
+    .btn-success:hover {
+        color: #fff;
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+    
+    .btn-success {
+        color: #fff;
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+</style>
 
 
 <script>
-  function changeIcon(id)
-  { 
-    var image = document.getElementById(id)
-    if(image.src.match("./static/img/dropdown-icon.png") || image.src.match("./static/img/dropdown-icon.png") ){
-      document.getElementById(id).src="./static/img/dropdown-icon-rotated.png";
+    function changeIcon(id) {
+        var image = document.getElementById(id)
+        if (image.src.match("./static/img/dropdown-icon.png") || image.src.match("./static/img/dropdown-icon.png")) {
+            document.getElementById(id).src = "./static/img/dropdown-icon-rotated.png";
+        } else {
+            document.getElementById(id).src = "./static/img/dropdown-icon.png";
+        }
     }
-    else
-    {
-      document.getElementById(id).src="./static/img/dropdown-icon.png";
-    }
-  }
-  </script>
+</script>
 
 <h1>Kassa <img width="35px" height="auto" src="./static/img/salary.png" alt="salary"></h1>
 
@@ -47,10 +46,9 @@
 {%for game in games %}
 
 <div class="table-responsive">
-  {% if loop.index0 is divisibleby 2 %}
-  <button onclick="changeIcon('dropdown{{loop.index}}')" class="btn" style="background-color: #007bff; color: white; height: 60px; width: 100%; text-align: left; border: none" type="button" data-toggle="collapse" 
-    data-target="#header{{loop.index}}" aria-controls="navbarToggleExternalContent" aria-expanded="false"
-    aria-label="Toggle navigation">  
+    {% if loop.index0 is divisibleby 2 %}
+    <button onclick="changeIcon('dropdown{{loop.index}}')" class="btn" style="background-color: #007bff; color: white; height: 60px; width: 100%; text-align: left; border: none" type="button" data-toggle="collapse" data-target="#header{{loop.index}}" aria-controls="navbarToggleExternalContent"
+        aria-expanded="false" aria-label="Toggle navigation">  
     <b>{{game.gameday}}. {{game.home_team}} vs. {{game.away_team}}</b><img id="dropdown{{loop.index}}" style="margin-left: 5px" src="./static/img/dropdown-icon.png" width="17px" height="auto">
   {% else %}
   <button onclick="changeIcon('dropdown{{loop.index}}')" class="btn" style="background-color: #ff8100; color: white; height: 60px; width: 100%; text-align: left; border: none" type="button" data-toggle="collapse" 
@@ -58,69 +56,57 @@
   aria-label="Toggle navigation">  
   <b>{{game.gameday}}. {{game.home_team}} vs. {{game.away_team}}</b><img id="dropdown{{loop.index}}" style="margin-left: 5px" src="./static/img/dropdown-icon.png" width="17px" height="auto">
     {% endif %}
-  </button> 
-  
+  </button>
 
-  <br/>
-  <div class="collapse navbar-collapse" id="header{{loop.index}}">
-    <!-- Search Field -->
-    <input
-    style="width: 100%; margin: 5px 0px 5px 0px"
-    type="text"
-    id="inputSearch{{loop.index}}"
-    class="form-control"
-    onkeyup="filterTable('table{{loop.index}}', 'inputSearch{{loop.index}}')"
-    placeholder="Suche nach Namen..."
-    title="Tippe Namen ein"
-  />
-    <table id="table{{loop.index}}" class="table table-striped table-hover">
-      <thead>
-        <tr>
-        </tr>
-        <tr>
-          <th scope="col">Spieler</th>
-          <th scope="col">Betrag</th>
-          <th scope="col">Status</th>
-          <th scope="col">Bezahlt</th>
-        </tr>
-      </thead>
-      <tbody>
-        {%for payment_info in payment_information %}
-        {% if game.id == payment_info[6] %}
-    <tr>
-      <td scope="row">{{payment_info[4]}} {{payment_info[5]}}</td>
-      <td scope="row">{{payment_info[0]}} €</td>
-      <td scope="row">
-        {% if not payment_info[3] %}
-        <svg xmlns="http://www.w3.org/2000/svg" style="color: rgb(206, 0, 0);" width="20px" height="20px" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+
+    <br/>
+    <div class="collapse navbar-collapse" id="header{{loop.index}}">
+        <!-- Search Field -->
+        <input style="width: 100%; margin: 5px 0px 5px 0px" type="text" id="inputSearch{{loop.index}}" class="form-control" onkeyup="filterTable('table{{loop.index}}', 'inputSearch{{loop.index}}')" placeholder="Suche nach Namen..." title="Tippe Namen ein" />
+        <form method="POST">
+            <table id="table{{loop.index}}" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                    </tr>
+                    <tr>
+                        <th scope="col">Spieler</th>
+                        <th scope="col">Betrag</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Bezahlt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for payment_info in payment_information %} {% if game.id == payment_info[6] %}
+                    <tr>
+                        <td scope="row">{{payment_info[4]}} {{payment_info[5]}}</td>
+                        <td scope="row">{{payment_info[0]}} €</td>
+                        <td scope="row">
+                            {% if not payment_info[3] %}
+                            <svg xmlns="http://www.w3.org/2000/svg" style="color: rgb(206, 0, 0);" width="20px" height="20px" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
         </svg>
-      </td>
-      <td scope="row">
-        <form method="POST" >
-          <input type="checkbox" class="largerCheckbox" value="{{payment_info[6]}}, {{payment_info[7]}}" name="payment_checkbox" style="width: 20px"/>
-      </td>
-        {% else %}
-        <svg xmlns="http://www.w3.org/2000/svg" style="color: green" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                        </td>
+                        <td scope="row">
+                            <input type="checkbox" class="largerCheckbox" value="{{payment_info[6]}}, {{payment_info[7]}}" name="payment_checkbox" style="width: 20px" />
+                        </td>
+                        {% else %}
+                        <svg xmlns="http://www.w3.org/2000/svg" style="color: green" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
           <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
         </svg>
-      </td>
-      <td></td>
-        {% endif %}
-      </tr>
-    {%endif %}
-
-    {% endfor %}
-    <tr id = "xx">
-      <td style="text-align: right;"> <!--<b>Gesamt:</b><br/> --><b>Bezahlt:</b></td>
-      <td>
-        <!--{{total_payment[loop.index0][1]}}€ <br/>-->
-        {%for pay_sum in payed_sum %}
-         {%if pay_sum[0] == game.id%} {{pay_sum[1]}}€{% endif %}
-        {%endfor%}
-      </td>
-      <td colspan="2">
-      <button style="float: right; margin-right: 10px" type="submit" class="btn btn-success">
+                        </td>
+                        <td></td>
+                        {% endif %}
+                    </tr>
+                    {%endif %} {% endfor %}
+                    <tr id="xx">
+                        <td style="text-align: right;">
+                            <!--<b>Gesamt:</b><br/> --><b>Bezahlt:</b></td>
+                        <td>
+                            <!--{{total_payment[loop.index0][1]}}€ <br/>-->
+                            {%for pay_sum in payed_sum %} {%if pay_sum[0] == game.id%} {{pay_sum[1]}}€{% endif %} {%endfor%}
+                        </td>
+                        <td colspan="2">
+                            <button style="float: right; margin-right: 10px" type="submit" class="btn btn-success">
           <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 15px;" width="16" height="16" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0z"/>
             <path d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1h-.003zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195l.054.012z"/>
@@ -128,22 +114,17 @@
             <path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 5.982 5.982 0 0 1 3.13-1.567z"/>
           </svg>Submit
       </button>
-      </td>
-    </tr>
-  </form>
-  </tbody>
-  <caption>
-    Status: {% if game.id in games_not_payed %} Nicht alle bezahlt
-              <img width="15px" height="auto" style="padding-bottom: 4px;" src="./static/img/x-icon.png" alt="x">
-            {% else %} Alle Bezahlt
-              <img width="15px" height="auto" style="padding-bottom: 4px;" src="./static/img/check-icon.png" alt="x">
-            {%endif%} 
-  </caption>
-  
-  </table>
-  </div>
-</div>
-  <br/>
-{% endfor %}
+                        </td>
+                    </tr>
+        </form>
+        </tbody>
+        <caption>
+            Status: {% if game.id in games_not_payed %} Nicht alle bezahlt
+            <img width="15px" height="auto" style="padding-bottom: 4px;" src="./static/img/x-icon.png" alt="x"> {% else %} Alle Bezahlt
+            <img width="15px" height="auto" style="padding-bottom: 4px;" src="./static/img/check-icon.png" alt="x"> {%endif%}
+        </caption>
 
-{% endblock %}
+        </table>
+    </div>
+</div>
+<br/> {% endfor %} {% endblock %}
