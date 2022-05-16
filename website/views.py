@@ -322,7 +322,7 @@ def payment():
 def bet_details():
     if current_user.role == "ADMIN":
         games = Game.query
-        statistics = db.session.query(Bet, Player).filter(Bet.player_id == Player.id).all()
+        statistics = db.session.query(Bet, Player).filter(Bet.player_id == Player.id).order_by(Player.id.desc()).all()
         #db_connection = psycopg2.connect(heroku_db_link)
         # cursor = db_connection.cursor()
         # cursor.execute("Select bet.game_id, player.id, player.first_name, player.last_name, bet.participant, home_goals, away_goals\
