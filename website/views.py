@@ -80,14 +80,14 @@ def bet():
             db.session.commit()
         # set bet is payed to false if new there is a new bet
         # change bet_is_payed boolean of specific game in assoc table
-            connection = psycopg2.connect(heroku_db_link)
-            cursor = connection.cursor()
-            query = "UPDATE participates SET bet_is_payed = %s WHERE player_id = %s and game_id = %s"
-            query_data = (False, player_id, game_id)
-            cursor.execute(query, query_data)
-            connection.commit()
-            cursor.close()
-            connection.close()
+            # connection = psycopg2.connect(heroku_db_link)
+            # cursor = connection.cursor()
+            # query = "UPDATE participates SET bet_is_payed = %s WHERE player_id = %s and game_id = %s"
+            # query_data = (False, player_id, game_id)
+            # cursor.execute(query, query_data)
+            # connection.commit()
+            # cursor.close()
+            # connection.close()
         else:
             flash("Negative Anzahl Tore nicht möglich", category='error')
     return render_template("bet.html", name=current_user.first_name, bets=bets, active_games=games)
@@ -147,7 +147,7 @@ def games():
                         query = "UPDATE participates SET bet_is_payed = %s WHERE player_id = %s and game_id = %s"
                         query_data = (False, player.id, new_game.id)
                         cursor.execute(query, query_data)
-                    connection.commit()
+                        connection.commit()
                     cursor.close()
                     connection.close()
                     flash("Game added successfully!", category='success')
@@ -226,7 +226,7 @@ def payment():
             Where bet.id is NULL\
             GROUP BY g.id, g.home_team, g.away_team, p.bet_is_payed, pl.first_name, pl.last_name, pl.id\
         ) as x\
-            ORDER BY x.game_id desc\
+            ORDER BY x.game_id desc, x.bet_is_payed asc, x.first_name asc, x.last_name asc\
         ")
         payment_information = cursor.fetchall()
          
@@ -302,10 +302,11 @@ def payment():
                 query ="UPDATE participates SET bet_is_payed = true WHERE game_id = %s AND player_id = %s"
                 # update all
                 for data in data_pay_form:  
-                    data = data.split(",")   
+                    data = data.split(", ")    
                     query_data = (data[0], data[1])
                     cursor.execute(query, query_data)
-                db_connection.commit()
+                    print(query, query_data) 
+                    db_connection.commit()
                 #Close DB Conn after execution
                 cursor.close()
                 db_connection.close()
